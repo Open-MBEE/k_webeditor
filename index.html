@@ -1,141 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Model Web Editor</title>
-    <style>
-        #editor { 
-                position: absolute;
-                top: 50px;
-                right: 10px;
-                bottom: 10px;
-                left: 10px;
-            }
-    </style>
+  <meta charset="UTF-8">
+  <title>K editor created with ANTLR4 and ACE</title>
+  <link rel="stylesheet" href="index.css">
+
+  <script src="require.js"></script>
+  <script type="application/javascript">
+    var antlr4 = require('antlr4/index');
+    var antlr4_require = require;
+  </script>
+  <script
+			  src="https://code.jquery.com/jquery-3.2.1.min.js"
+			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+			  crossorigin="anonymous"></script>
+  <script src="dependencies/ace-builds/src-noconflict/ace.js"></script>
+  <script src="dependencies/ace-builds/src-noconflict/ext-language_tools.js"></script>
+  <script>
+    ace.define('antlr4/index', function (require, exports, module) {
+      module.exports = antlr4;
+    });
+  </script>
+  <script src="ace-config.js"></script>
+  <script src="dependencies/antlr4-ace-ext/src/token-type-map.js"></script>
+  <script src="dependencies/antlr4-ace-ext/src/tokenizer.js"></script>
 </head>
 <body>
-    <div id="editor">
-    </div>
-    <script src="global-index.js" type="text/javascript"></script>
-    <script src="ace/ace.js" type="text/javascript"></script>
-    <script src="ace/theme-model.js" type="text/javascript"></script>
-    <script src="ace/ext-language_tools.js"></script>
-    <script src="ace/ext-tooltip.js"></script>
-    <script src="ace/ext-searchbox.js"></script>
-    <script src="ace/snippets/model.js" type="text/javascript"></script>
-    <script src="ace/mode-model.js" type="text/javascript"></script>
-    <script src="ace/worker-model.js" type="text/javascript"></script>
-    <script type="text/javascript">
-    	//the guid associated to this editor
-    	var guid = Math.round(Math.random() * 1000);
-  		var index = [];
-		ace.require("ace/config").set("workerPath", './ace');
-		var langTools = ace.require("ace/ext/language_tools");
-		var editor = ace.edit("editor");
-		editor.getSession().setUseWrapMode(true);
-	    editor.getSession().setTabSize(4); 
-	    editor.getSession().setUseSoftTabs(true);
-		editor.getSession().getUndoManager().reset();
-		editor.setShowPrintMargin(false);
-		editor.setBehavioursEnabled(true);
-		editor.setWrapBehavioursEnabled(true); 
-		editor.setReadOnly(false);			
-	    editor.setFontSize(12);
-	    editor.setTheme("ace/theme/model");
-	    editor.getSession().setMode("ace/mode/model");
-	    editor.setOptions({
-			enableBasicAutocompletion: true,
-			enableTextCompleter: false,
-			enableKeyWordCompleter: false,
-			enableSnippets: false,
-		});
-		editor.getSession().setUseWorker(true);
-	    var globalScope = {
-	    		getCompletions: function(editor, session, pos, prefix, callback) {
-	    	 	   for (var i=0; i < index.length; i++) {
-	    			   if (index[i].indexOf(guid)>-1) {
-	    				  index.splice(i, 1);
-	    				  i--;
-	    			   }
-	    		   }	    	
-	    	    	// remove the reference prefixes
-		            for (var i=0;i<index.length;i++) {
-		            	index[i] = index[i].substring(index[i].indexOf("#")+1, index[i].length);
-		            }
-		            var wordList = index;
-	    	    	callback(null, wordList.map(function(word) {
-		                return {
-		                    name: word,
-		                    value: word,
-		                    score: 1,
-		                    meta: "[global]"
-		                };
-		            }));
-	    	    }   
-	        }
-		var completers = editor.completers;
-	    langTools.addCompleter(globalScope);
-	    
-		//add documentation hover
-		var TokenTooltip = ace.require("ace/ext/tooltip").TokenTooltip;	
-		editor.tokenTooltip = new TokenTooltip(editor);		 	
+  <div id="editor">
+  ==============================================
+  This example shows how a simple state machine
+  can be encoded using K and then checked for
+  any non-deterministic transitions (which are 
+  considered erroneous). 
+  ==============================================
 
-	    //create the shared worker
-	 	var worker = new SharedWorker("global-index.js");
-	 	//"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-file-access-from-files
-	 	worker.port.onmessage = function(e) {
-	 		console.log(
-	 			"call number: " + e.data.counter + "\n"+
-	 			"message: " + e.data.message + "\n" +
-	 			"editor Id: " + e.data.guid + "\n" +
-	 			"index: " + e.data.index
-	 		);
-	 		//update the index reference
-	 		index = e.data.index;
-        };   
+  package examples.sm
 
-	 	//on focus get
-		editor.on("focus", function() {
-	 	});
-		
-		//on focus lost
-	 	editor.on("blur", function() {
-	 	});
-	 	
-	 	//on input
-	 	editor.on("input", function() {
-	 	});
-	 	
-	 	//on change
-		editor.on("change", function(event) {	
-			var splitRegex = /[^a-zA-Z_0-9\$\-]+/;
-			index = editor.getValue().split(splitRegex);
-	        worker.port.postMessage({
-	           	message: editor.getValue(), 
-	           	guid: guid, 
-	           	index: index
-	        });
-	        
-	        index = [];
-        });											
-	 	worker.port.onmessage = function(e) {
-	 		//update the index reference
-	 		index = e.data.index;
-        };
-        
-		//Bind keyboard shorcuts
-		editor.commands.addCommand({
-			name: 'saveFile',
-			bindKey: {
-			win: 'Ctrl-S',
-			mac: 'Command-S',
-			sender: 'editor|cli'
-			},
-			exec: function(env, args, request) {
-				//TODO
-			}
-		});
-    </script>
+  class Event
+  class State
+
+  class RocketMachine {
+
+    off : State
+    ready : State
+    firing : State
+    turn_on : Event
+    fire : Event
+    turn_off : Event
+      
+    fun move(s: State, e: Event) : State
+    
+    req off != ready && off != firing && firing != ready
+      
+    req move(off, turn_on) = ready
+    req move(ready, fire) = firing
+    req move(firing, turn_off) = ready  
+
+    ==============================================
+    The following makes the state machine unsat 
+    because it introduces non-determinism.
+    ==============================================
+    -- req move(ready, fire) = off    
+  }
+  </div>
+  <div id="renderDiv"></div>
+
+  <script src="index.js"></script>
 </body>
 </html>
-
