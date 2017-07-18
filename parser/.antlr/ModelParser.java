@@ -1,4 +1,4 @@
-// Generated from c:\Users\afrivera\for_ub\git\MCR\public\keditor\parser\Model.g4 by ANTLR 4.7
+// Generated from c:\Users\afrivera\for_ub\git\k_editor\parser\Model.g4 by ANTLR 4.7
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;

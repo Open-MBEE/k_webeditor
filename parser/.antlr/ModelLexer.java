@@ -1,4 +1,4 @@
-// Generated from c:\Users\afrivera\for_ub\git\MCR\public\keditor\parser\Model.g4 by ANTLR 4.7
+// Generated from c:\Users\afrivera\for_ub\git\k_editor\parser\Model.g4 by ANTLR 4.7
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -510,12 +510,12 @@ public class ModelLexer extends Lexer {
 		"\u03e9\u03ea\3\2\2\2\u03ea\u03ec\3\2\2\2\u03eb\u03e9\3\2\2\2\u03ec\u03ed"+
 		"\b\u0092\2\2\u03ed\u0124\3\2\2\2\u03ee\u03f0\t\27\2\2\u03ef\u03ee\3\2"+
 		"\2\2\u03f0\u03f1\3\2\2\2\u03f1\u03ef\3\2\2\2\u03f1\u03f2\3\2\2\2\u03f2"+
-		"\u03f3\3\2\2\2\u03f3\u03f4\b\u0093\3\2\u03f4\u0126\3\2\2\2\u03f5\u03f6"+
+		"\u03f3\3\2\2\2\u03f3\u03f4\b\u0093\2\2\u03f4\u0126\3\2\2\2\u03f5\u03f6"+
 		"\7=\2\2\u03f6\u0128\3\2\2\2\65\2\u02b2\u02b6\u02ba\u02be\u02c2\u02c9\u02ce"+
 		"\u02d0\u02d6\u02da\u02de\u02e4\u02e9\u02f3\u02f7\u02fd\u0301\u0309\u030d"+
 		"\u0313\u031d\u0321\u0327\u032b\u0330\u0333\u0336\u033b\u033e\u0343\u0348"+
 		"\u0350\u035b\u035f\u0364\u0368\u0378\u038c\u0392\u0399\u039d\u03a3\u03b0"+
-		"\u03bf\u03c6\u03cc\u03d5\u03dc\u03e9\u03f1\4\2\3\2\b\2\2";
+		"\u03bf\u03c6\u03cc\u03d5\u03dc\u03e9\u03f1\3\2\3\2";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

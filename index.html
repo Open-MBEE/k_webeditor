@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>K editor created with ANTLR4 and ACE</title>
-  <link rel="stylesheet" href="index.css">
-
   <script src="require.js"></script>
   <script type="application/javascript">
     var antlr4 = require('antlr4/index');
     var antlr4_require = require;
   </script>
-  <script
-			  src="https://code.jquery.com/jquery-3.2.1.min.js"
-			  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-			  crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+
   <script src="dependencies/ace-builds/src-noconflict/ace.js"></script>
   <script src="dependencies/ace-builds/src-noconflict/ext-language_tools.js"></script>
   <script>
@@ -24,47 +22,22 @@
   <script src="ace-config.js"></script>
   <script src="dependencies/antlr4-ace-ext/src/token-type-map.js"></script>
   <script src="dependencies/antlr4-ace-ext/src/tokenizer.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.css" />
 </head>
+
 <body>
-  <div id="editor">
-  ==============================================
-  This example shows how a simple state machine
-  can be encoded using K and then checked for
-  any non-deterministic transitions (which are 
-  considered erroneous). 
-  ==============================================
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2" style="height: 100vh;" id="containmentTree">
+      </div>
+      <div class="col-md-8" style="height: 100vh;" id="editor"></div>
+      <div class="col-md-2" style="height: 100vh;" id="renderDiv"></div>
+    </div>
 
-  package examples.sm
-
-  class Event
-  class State
-
-  class RocketMachine {
-
-    off : State
-    ready : State
-    firing : State
-    turn_on : Event
-    fire : Event
-    turn_off : Event
-      
-    fun move(s: State, e: Event) : State
-    
-    req off != ready && off != firing && firing != ready
-      
-    req move(off, turn_on) = ready
-    req move(ready, fire) = firing
-    req move(firing, turn_off) = ready  
-
-    ==============================================
-    The following makes the state machine unsat 
-    because it introduces non-determinism.
-    ==============================================
-    -- req move(ready, fire) = off    
-  }
   </div>
-  <div id="renderDiv"></div>
-
   <script src="index.js"></script>
 </body>
+
 </html>

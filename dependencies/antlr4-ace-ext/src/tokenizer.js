@@ -41,12 +41,11 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
   };
 
   (function () {
-    this.getLineTokens = function getLineTokens(line) {
+    this.getLineTokens = function getLineTokens(line, startState) {
       var stream = new antlr4.InputStream(line);
       var lexer = new this.Lexer(stream);
 
-      // added line feed might cause token recognition error
-      // that should be ignored (not logged)
+      let state = startState || "start";
       lexer.removeErrorListeners();
 
       var commonTokens = lexer.getAllTokens();
@@ -57,15 +56,32 @@ ace.define('ace/ext/antlr4/tokenizer', ['antlr4/index'], function (require, expo
       var tokens = insertSkippedTokens(commonTokens, line)
         .map(mapCommonTokenToAceToken)
         .map(changeTokenTypeToAceType);
+      
+      for(let token of tokens){
+        if(token.type == "comment.border"){
+          if(state == "start") {
+            state = 'commentstart'
+          } else {
+            state = "start"
+          }
+          break;
+        }
+      }
+
+      if (state == 'commentstart'){
+        for(let token of tokens){
+          token.type = "comment";
+        }
+      }
+        
       return {
         tokens: tokens,
-        state: 'start'
+        state: state
       };
     };
 
     this.getAntlrTokenName = function getAntlrTokenName(tokenType) {
       var lexer = new this.Lexer();
-      if(tokenType==102) console.log('this');
       return lexer.symbolicNames[tokenType] ||
         lexer.literalNames[tokenType];
     };

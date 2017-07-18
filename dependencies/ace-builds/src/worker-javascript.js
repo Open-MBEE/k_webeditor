@@ -11768,6 +11768,8 @@ oop.inherits(JavaScriptWorker, Mirror);
     };
 
     this.onUpdate = function() {
+      console.log(this.getTokenizer())
+
         var value = this.doc.getValue();
         value = value.replace(/^#!.*\n/, "\n");
         if (!value)

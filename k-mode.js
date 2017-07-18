@@ -634,7 +634,8 @@ ace.define(
         });
 
         this.$worker.on("renderExpression", function(e) {
-            $('#renderDiv').html(e);
+            let expStr = e.data.map(e=>`<p>${e}</p>`).join(' ');
+            $('#renderDiv').html(expStr);
         });
 
         this.$worker.on("terminate", function() {
