@@ -1,0 +1,23 @@
+{
+  "name": "k_editor",
+  "version": "1.0.0",
+  "description": "A web editor for k",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.jpl.nasa.gov/mbee-dev/k_webeditor.git"
+  },
+  "keywords": [
+    "k",
+    "klang",
+    "ide"
+  ],
+  "author": "afrivera",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}
