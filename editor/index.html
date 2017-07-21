@@ -25,6 +25,12 @@
     ace.define('antlr4/index', function (require, exports, module) {
       module.exports = antlr4;
     });
+    var editor = ace.edit("aceEditor");
+    $('#send').on('click', function (){
+         $.post('locahost:3000/solve',editor.getValue() , function (data){
+           $('#solution').html(data);
+         }) 
+    })
   </script>
   <script src="ace-config.js"></script>
   <script src="dependencies/antlr4-ace-ext/src/token-type-map.js"></script>
@@ -38,6 +44,8 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-2" style="height: 100vh;" id="containmentTree">
+        <button id="send" class="btn btn-primary" type="submit">Send to Server</button>
+        <div class="well well-sm" id="solution"></div>
       </div>
       <div class="col-md-8" style="height: 100vh;" id="editor"></div>
       <div class="col-md-2" style="height: 100vh;" id="renderDiv"></div>
