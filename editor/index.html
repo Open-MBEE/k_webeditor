@@ -24,13 +24,7 @@
   <script>
     ace.define('antlr4/index', function (require, exports, module) {
       module.exports = antlr4;
-    });
-    var editor = ace.edit("aceEditor");
-    $('#send').on('click', function (){
-         $.post('locahost:3000/solve',editor.getValue() , function (data){
-           $('#solution').html(data);
-         }) 
-    })
+    });  
   </script>
   <script src="ace-config.js"></script>
   <script src="dependencies/antlr4-ace-ext/src/token-type-map.js"></script>
