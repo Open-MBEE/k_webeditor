@@ -21,8 +21,10 @@ app.post('/solve', function (req, res) {
     if (error) {
       console.error(`exec error: ${error}`);
       res.send('error');
+    } else {
+      res.send(`Result: ${stdout}`);
+      console.log(stdout,stderr);
     }
-    res.send(`Result: ${stdout}`);
   });
   }
 
