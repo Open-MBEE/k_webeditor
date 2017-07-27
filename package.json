@@ -4,8 +4,8 @@
   "description": "A web editor for k",
   "main": "app.js",
   "scripts": {
-    "build": "gulp default",
-    "start": "node app.js",
+    "build": "bash ./parser/buildParser.sh; gulp default",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
@@ -19,18 +19,21 @@
   "author": "afrivera",
   "license": "ISC",
   "dependencies": {
-    "antlr4": "file:antlr4",
+    "antlr4": "^4.7.0",
     "body-parser": "^1.17.2",
     "express": "^4.15.3"
   },
   "devDependencies": {
     "browserify": "^14.4.0",
     "chai": "^4.1.0",
+    "gulp": "^3.9.1",
     "gulp-antlr4": "^0.4.4",
     "gulp-browserify": "^0.5.1",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.6.1",
+    "vinyl-named": "^1.1.0",
     "vinyl-source-stream": "^1.1.0",
-    "vinyl-transform": "^1.0.0"
+    "vinyl-transform": "^1.0.0",
+    "webpack-stream": "^3.2.0"
   }
 }

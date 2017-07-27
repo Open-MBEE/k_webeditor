@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var named = require('vinyl-named');
 var webpack = require('webpack-stream');
-var antlr4 = require('gulp-antlr4');
 var replace = require("gulp-replace");
 
 
