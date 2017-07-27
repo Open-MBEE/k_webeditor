@@ -27,14 +27,13 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
   // load antlr4 and myLanguage
   var antlr4, ModelLexer, ModelParser, ModelListener;
   try {
-    window.require = antlr4_require;
-    antlr4 = antlr4_require('antlr4/index');
-    ModelLexer = antlr4_require('parser/ModelLexer').ModelLexer;
-    ModelParser = antlr4_require('parser/ModelParser').ModelParser;
-    ModelListener = antlr4_require('parser/ModelListener').ModelListener;
-
+    window.require = require = antlr4_require;
+    antlr4 = require('./build/parser/index').antlr4;
+    ModelLexer = require('./build/parser/index').ModelLexer;
+    ModelParser = require('./build/parser/index').ModelParser;
+    ModelListener = require('./build/parser/index').ModelListener;
   } finally {
-    window.require = ace_require;
+    window.require = require = ace_require;
   }
 
   // class for gathering errors and posting them to ACE editor
@@ -60,38 +59,61 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
   // class for listening for incoming expressions
 
   class ExpressionListener extends ModelListener {
-    constructor(expressions, tokenStream) {
-      super()
-      this.tokens = tokenStream;
+    constructor(parser, expressions) {
+      super();
+      this.parser = parser;
       this.expressions = expressions;
-      this.functions = [];
-      this.inFn = false;
+      this.structure = [];
     }
-    exitConstraint(ctx) {
-      var start_index = ctx.start.tokenIndex;
-      var stop_index = ctx.stop.tokenIndex;
-      var user_text = this.tokens.getText({start: start_index, stop: stop_index});
-      this.expressions.push(user_text);
-    };
-    enterFunctionDeclaration(ctx){
-      this.inFn = true;
-      this._tempBuilder = ctx.Identifier().getText();
-    }
-    enterParamList(ctx){
-      if(this.inFn){
-              this._tempBuilder += '(' + ctx.getText() + ')';
+
+    enterEntityDeclaration(ctx){
+      this._inClass = true;
+      var tok = this.parser.getTokenStream();
+      if(ctx.Identifier() != null){
+          let idText = ctx.Identifier().toString();
+          this.structure.push({name: idText, children: []});
       }
     }
-    exitFunctionDeclaration(ctx) {
-      // var start_index = ctx.start.tokenIndex;
-      // var stop_index = ctx.stop.tokenIndex;
-      // var user_text = this.tokens.getText({start: start_index, stop: stop_index});
-      this.functions.push(this._tempBuilder);
-      this._tempBuilder = undefined;
-      this.inFn = false;
-    };
+    exitEntityDeclaration(ctx){
+      this._inClass = false
+    }
+
+    enterMemberDeclaration(ctx){
+        var tok = this.parser.getTokenStream();
+        if(typeof ctx.constraint != 'undefined' && ctx.constraint() != null){
+          let ctText = tok.getText(ctx.constraint());
+            if(this._inClass){
+              let lastI = this.structure.length - 1;
+              if(typeof this.structure[lastI] != 'undefined'){
+                  this.structure[lastI].children.push(ctText);
+              }
+            } else {
+                this.expressions.push(ctText);
+            }
+        }
+    }
+    // exitMemberDeclaration(ctx){
+    //
+    // }
+    // enterFunctionDeclaration(ctx){
+    //       this.inFn = true;
+    //       this._tempBuilder = ctx.Identifier().getText();
+    // }
+    // enterConstraintDeclaration(ctx){
+    //
+    // }
+    // enterParamList(ctx){
+    //   if(this.inFn){
+    //           this._tempBuilder += '(' + ctx.getText() + ')';
+    //   }
+    // }
+    // exitFunctionDeclaration(ctx) {
+    //   this.functions.push(this._tempBuilder);
+    //   this._tempBuilder = undefined;
+    //   this.inFn = false;
+    // };
     exitModel(ctx){
-        console.log(this.functions);
+        console.log(this.structure);
     }
 
   }
@@ -119,7 +141,8 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
     var tree = parser.model();
     var walker = new antlr4.tree.ParseTreeWalker();
     var expressions = [];
-    walker.walk(new ExpressionListener(expressions,tokens), tree);
+    var listener = new ExpressionListener(parser,expressions);
+    walker.walk(listener, tree);
     return expressions;
   }
 

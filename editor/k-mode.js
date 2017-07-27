@@ -554,7 +554,7 @@ ace.define(
         var tokenTypeMapping = antlr4_require('./k-token-map');
         var createTokenTypeMap = require('ace/ext/antlr4/token-type-map').createTokenTypeMap;
         var tokenTypeToNameMap = createTokenTypeMap(tokenTypeMapping);
-        var ModelLexer = antlr4_require('./parser/ModelLexer').ModelLexer;
+        var ModelLexer = antlr4_require('./build/parser/index').ModelLexer;
         var Antlr4Tokenizer = require('ace/ext/antlr4/tokenizer').Antlr4Tokenizer;
         var MatchingBraceOutdent = require("ace/mode/matching_brace_outdent").MatchingBraceOutdent;
         var CstyleBehaviour = require("./behaviour/cstyle").CstyleBehaviour;
