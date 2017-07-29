@@ -36,7 +36,13 @@ app.post('/solve/:runType', function (req, res) {
                       var errr=error + '\n' + stderr
                       res.json({error: stderr});
                   } else {
-                      res.json(`${JSON.parse(stdout)}`);
+                      let outArr = stdout.split("**************");
+                      if (outArr.length > 1) {
+                          let jsonVal = outArr[1];
+                          res.json(JSON.parse(jsonVal));
+                      } else {
+                          res.end();
+                      }
                       console.log(stdout,stderr);
                   }
               });
