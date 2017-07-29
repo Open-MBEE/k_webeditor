@@ -1,9 +1,8 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const shell = require('shelljs')
 const bodyParser = require('body-parser');
-const { exec } = require('child_process');
-
-
+const app = express();
+const fs = require('fs');
 app.use(express.static('editor'))
 
 app.use(bodyParser.urlencoded({
@@ -18,21 +17,35 @@ app.listen(8080, function () {
 app.post('/solve/:runType', function (req, res) {
   if(typeof req.body.value !== 'undefined'){
     var runType = typeof req.params.runType === 'undefined' ? "solve" : req.params.runType;
-    var identifier = req.ip + Date.now();
-var command = `bash k  --package K${identifier.replace(/\W/g,'')} '${req.body.value}'`;
-    //var command = `bash k --${runType}  --package K${identifier.replace(/\W/g,'')} '${req.body.value}'`;
-    console.log(command);
-    exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      console.log(stdout,stderr);
-      var errr=error + '\n' + stderr
-      res.send((errr.length > 3 ? `Error: ${error}\n${stderr}` : '') + `\nResult:\n${stdout}`);
-      } else {
-      res.send(`Result:\n${stdout}`);
-      console.log(stdout,stderr);
+    var ip = req.ip.replace(/\W/g,'');
+    var identifier = ip + '_' + Date.now();
+    var pkg = 'K'+identifier;
+
+
+    if(!fs.existsSync(ip)){
+      shell.mkdir('-p',ip)
+    } else {
+        let filePath = `${shell.pwd()}/${ip}/${pkg}.k`
+        fs.writeFile('./'+ip+'/'+identifier+'.k', body.value, function(){
+            if(!err){
+                var command = `bash k --${runType}  --package ${pkg} ${filePath}`;
+                shell.exec(command, (code, stdout, stderr) => {
+                  if (code) {
+                      console.error(`exec error: ${code}`);
+                      console.log(stdout,stderr);
+                      var errr=error + '\n' + stderr
+                      res.json({error: stderr});
+                  } else {
+                      res.json(`${JSON.parse(stdout)}`);
+                      console.log(stdout,stderr);
+                  }
+              });
+
+          }
+
+      });
     }
-  });
+
   }
 
 })
