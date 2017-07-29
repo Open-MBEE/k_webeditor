@@ -26,7 +26,7 @@ app.post('/solve/:runType', function (req, res) {
       shell.mkdir('-p',ip)
     } else {
         let filePath = `${shell.pwd()}/${ip}/${pkg}.k`
-        fs.writeFile('./'+ip+'/'+identifier+'.k', req.body.value, function(){
+        fs.writeFile('./'+ip+'/'+identifier+'.k', req.body.value, function(err){
             if(!err){
                 var command = `bash k --${runType}  --package ${pkg} ${filePath}`;
                 shell.exec(command, (code, stdout, stderr) => {
