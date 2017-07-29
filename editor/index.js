@@ -9,6 +9,6 @@ editor.setOptions({
 });
  $('#send').on('click', function (){
          $.post('/solve/solve',{value: editor.getValue()} , function (data){
-           $('#solution').html(data);
+           $('#solution').html(JSON.stringify(a));
          }) 
     });
