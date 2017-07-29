@@ -29,7 +29,7 @@ app.post('/solve/:runType', function (req, res) {
         fs.writeFile('./'+ip+'/'+identifier+'.k', req.body.value, function(err){
             if(!err){
                 var command = `bash k --${runType}  --package ${pkg} ${filePath}`;
-                shell.exec(command, (code, stdout, stderr) => {
+                shell.exec('ls', (code, stdout, stderr) => {
                   if (code) {
                       console.error(`exec error: ${code}`);
                       console.log(stdout,stderr);
