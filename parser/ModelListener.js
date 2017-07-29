@@ -1,7 +1,7 @@
-// Generated from Model.g4 by ANTLR 4.7
+// Generated from /home/afrivera/git/Klang/src/grammar/Model.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
-var constraints;
+
 // This class defines a complete listener for a parse tree produced by ModelParser.
 function ModelListener() {
 	antlr4.tree.ParseTreeListener.call(this);
@@ -175,7 +175,6 @@ ModelListener.prototype.exitFunctionDeclaration = function(ctx) {
 
 // Enter a parse tree produced by ModelParser#paramList.
 ModelListener.prototype.enterParamList = function(ctx) {
-			console.log(ctx.getText());
 };
 
 // Exit a parse tree produced by ModelParser#paramList.
@@ -360,6 +359,15 @@ ModelListener.prototype.enterSetEnumExp = function(ctx) {
 
 // Exit a parse tree produced by ModelParser#SetEnumExp.
 ModelListener.prototype.exitSetEnumExp = function(ctx) {
+};
+
+
+// Enter a parse tree produced by ModelParser#IndexExp.
+ModelListener.prototype.enterIndexExp = function(ctx) {
+};
+
+// Exit a parse tree produced by ModelParser#IndexExp.
+ModelListener.prototype.exitIndexExp = function(ctx) {
 };
 
 
