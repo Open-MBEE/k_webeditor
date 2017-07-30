@@ -573,7 +573,7 @@ ace.define(
 
             this.$id = "ace/mode/k-mode";
             this.lineCommentStart = "//";
-            this.blockComment = { start: "/*", end: "*/" };
+            this.blockComment = { start: "===", end: "===" };
 
             this.getTokenizer = function () {
                 if (!this.$tokenizer) {
@@ -635,24 +635,46 @@ ace.define(
                 });
 
                 this.$worker.on("renderExpression", function (e) {
-                    const padP = (t) => {
-                        return `<div class="well well-sm">
-                                 $$ ${t} $$
-                                 </div>`};
+                    const stripReq = (s) => { s.value = s.value.replace('req', '').replace(/\|\|/g, 'or').replace(/\&\&/g, 'and'); return s};
                     const parseMath = e => {
                         try {
-                            return mathjs.parse(e)
-                        } catch (e) {
-                            return mathjs.parse('')
+                            e.value = mathjs.parse(e.value);
+                            return e
+                        } catch (err) {
+                            e.value = mathjs.parse('0');
+                            return e
                         }
                     };
-                    const stripReq = (s) => { return s.replace('req', '').replace(/\|\|/g, 'or').replace(/\&\&/g, 'and') }
+                    const toTex = p => {p.value = p.value.toTex(); return p;};
+                    const cardOut = (obj) => {
+                        return obj.children.length > 0 ? `
+ <div class="ui fluid accordion segment">
+    <div class="active title"> <i class="chevron down icon"></i> ${obj.name}</div>
+    <div class="active content">
+    <i>${obj.children.length} expressions</i>
+    ${obj.children.map(stripReq).map(parseMath).map(toTex).map(p=>'<p class="prettyExpr" data-line="'+p.line+'" data-col="'+p.col+'">$$'+p.value+'$$</p>').join('')}
+    </div>
+  </div>
+  <div class="title"></div>
+  <div class="content"></div>
+</div>` : ''};
+                    const goToLineandCol = function (e){
+                        var editor = ace.edit('editor');
+                        let l = $(this).data('line');
+                        let c = $(this).data('col');
+                        // editor.resize(true);
+                        editor.focus();
+                        editor.gotoLine(l, c, true);
 
-                    let expStr = e.data.map(stripReq).map(parseMath).map(p => p.toTex({ parenthesis: 'keep' })).map(padP);
+                    };
+                    let expStr = e.data.map(cardOut);
+
                     $('#renderDiv').html(expStr);
+                    $('.ui.accordion').accordion();
 
-                    // MathJax.Hub.Queue(['Rerender', MathJax.Hub, "renderDiv"]);
-                    MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+                    $('.prettyExpr').on('click', goToLineandCol);
+
+                    MathJax.Hub.Queue(["Typeset", MathJax.Hub,"renderDiv"]);
                 });
 
                 this.$worker.on("terminate", function () {

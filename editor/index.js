@@ -12,3 +12,14 @@ editor.setOptions({
            $('#solution').html(JSON.stringify(data));
          }) 
     });
+
+function toggleConsole(){
+    $('#consoleTitle div i.up').toggleClass('down')
+    $('#editor').toggleClass('collapsed');
+    $('#console').toggleClass('collapsed');
+    $('#consoleContent').toggleClass('visible');
+}
+
+$('.ui.accordion').accordion('refresh');
+
+$('#consoleTitle').on('click', toggleConsole);

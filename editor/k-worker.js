@@ -1,7 +1,7 @@
 importScripts("dependencies/ace-worker/worker.js");
 importScripts("dependencies/ace-builds/src-noconflict/ace.js");
 importScripts("dependencies/ace-worker/mirror.js");
-
+importScripts("dependencies/lodash.js")
 ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop", "ace/worker/mirror"], function (require, exports, module) {
   "use strict";
 
@@ -59,11 +59,11 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
   // class for listening for incoming expressions
 
   class ExpressionListener extends ModelListener {
-    constructor(parser, expressions) {
+    constructor(parser, structure) {
       super();
       this.parser = parser;
-      this.expressions = expressions;
-      this.structure = [];
+      this.structure = structure;
+      this.structure.push({name: 'Global', children: []})
     }
 
     enterEntityDeclaration(ctx){
@@ -82,13 +82,14 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         var tok = this.parser.getTokenStream();
         if(typeof ctx.constraint != 'undefined' && ctx.constraint() != null){
           let ctText = tok.getText(ctx.constraint());
+            let obj = {value: ctText, line: ctx.constraint().start.line, col:ctx.constraint().start.column};
             if(this._inClass){
               let lastI = this.structure.length - 1;
               if(typeof this.structure[lastI] != 'undefined'){
-                  this.structure[lastI].children.push(ctText);
+                  this.structure[lastI].children.push(obj);
               }
             } else {
-                this.expressions.push(ctText);
+                this.structure[0].children.push(obj);
             }
         }
     }
@@ -113,7 +114,6 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
     //   this.inFn = false;
     // };
     exitModel(ctx){
-        console.log(this.structure);
     }
 
   }
@@ -147,16 +147,17 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
   }
 
   (function () {
-
-    this.onUpdate = function () {
-      var value = this.doc.getValue();
-      var annotations = validate(value);
-      if (annotations.length == 0) {
-        var expressions = listenForExpressions(value);
-        this.sender.emit("renderExpression", expressions)
-      }
-      this.sender.emit("annotate", annotations);
+    var runListeners = function () {
+        var value = this.doc.getValue();
+        var annotations = validate(value);
+        if (annotations.length == 0) {
+            var expressions = listenForExpressions(value);
+            this.sender.emit("renderExpression", expressions)
+        }
+        this.sender.emit("annotate", annotations);
     };
+
+    this.onUpdate = _.debounce(runListeners, 500)
 
   }).call(MyWorker.prototype);
 

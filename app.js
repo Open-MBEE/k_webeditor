@@ -3,7 +3,7 @@ const shell = require('shelljs')
 const bodyParser = require('body-parser');
 const app = express();
 const fs = require('fs');
-app.use(express.static('editor'))
+app.use(express.static('editor'));
 
 app.use(bodyParser.urlencoded({
     extended: true

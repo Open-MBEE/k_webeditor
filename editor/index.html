@@ -2,51 +2,105 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>K editor created with ANTLR4 and ACE</title>
-  <script src="require.js"></script>
-  <script type="application/javascript">
-    var antlr4 = require('./build/parser/index').antlr4;
-    var antlr4_require = require;
-  </script>
-  <script type="text/x-mathjax-config">
+    <meta charset="UTF-8">
+    <title>K-Web Editor</title>
+    <script src="require.js"></script>
+    <script type="application/javascript">
+        var antlr4 = require('./build/parser/index').antlr4;
+        var antlr4_require = require;
+    </script>
+    <script type="text/x-mathjax-config">
     MathJax.Hub.Config({ CommonHTML: { linebreaks: { automatic: true } }, "HTML-CSS": { linebreaks: { automatic: true } }, SVG:
     { linebreaks: { automatic: true } } });
-  </script>
-  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js">
-
-  </script>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-    crossorigin="anonymous"></script>
-
-  <script src="dependencies/ace-builds/src-noconflict/ace.js"></script>
-  <script src="dependencies/ace-builds/src-noconflict/ext-language_tools.js"></script>
-  <script>
-    ace.define('antlr4/index', function (require, exports, module) {
-      module.exports = antlr4;
-    });  
-  </script>
-  <script src="ace-config.js"></script>
-  <script src="dependencies/antlr4-ace-ext/src/token-type-map.js"></script>
-  <script src="dependencies/antlr4-ace-ext/src/tokenizer.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.css" />
+    </script>
+    <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML.js">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="build/semantic/semantic.min.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script src="build/semantic/semantic.min.js"></script>
+    <script src="dependencies/ace-builds/src-noconflict/ace.js"></script>
+    <script src="dependencies/ace-builds/src-noconflict/ext-language_tools.js"></script>
+    <script>
+        ace.define('antlr4/index', function (require, exports, module) {
+            module.exports = antlr4;
+        });
+    </script>
+    <script src="ace-config.js"></script>
+    <script src="dependencies/antlr4-ace-ext/src/token-type-map.js"></script>
+    <script src="dependencies/antlr4-ace-ext/src/tokenizer.js"></script>
 </head>
 
 <body>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-2" style="height: 100vh;" id="containmentTree">
-        <button id="send" class="btn btn-primary" type="submit">Send to Server</button>
-        <div class="well well-sm" id="solution"></div>
-      </div>
-      <div class="col-md-8" style="height: 100vh;" id="editor"></div>
-      <div class="col-md-2" style="height: 100vh;" id="renderDiv"></div>
+<div class="ui grid">
+    <div class="row full-view">
+        <div class="computer only three wide column bordered sides" id="containmentTree">
+            <button id="send" class="btn btn-primary" type="submit">Send to Server</button>
+            <div class="well well-sm" id="solution"></div>
+        </div>
+        <div class="ten wide column ui grid">
+            <div class="sixteen wide column expanded" id="editor"></div>
+            <div class="row no-padding">
+                <div class="ui sixteen wide column no-padding">
+                <div id="console" class="collapsed">
+                    <div id="consoleTitle">
+                        <div class="ui horizontal flat inverted muted-black divider"><i class="chevron up icon"></i> Console</div>
+                    </div>
+                    <div id="consoleContent" class="muted-black"><code>
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output
+                        Sample Output Sample OutputSample OutputSample OutputSample OutputSample OutputSample Output</code>
+                    </div>
+                </div>
+            </div></div>
+        </div>
+        <div class="three wide column bordered sides" id="renderDiv"></div>
     </div>
+</div>
+<div class="row no-padding footer">
+    <div class="ui two bottom attached center aligned black fluid inverted segment">
+        <i>K Language IDE</i>
+    </div>
+</div>
 
-  </div>
-  <script src="index.js"></script>
+
+<script src="index.js"></script>
 </body>
 
 </html>

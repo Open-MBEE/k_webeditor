@@ -1,11 +1,79 @@
-#editor {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: 80%;
+.no-padding {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
-#renderDiv {
-    position: relative;
-    width: 20%;
+
+.full-view {
+    height: calc(100vh - 3rem);
+}
+
+#editor {
+    max-height: calc(100% - 1rem);
+    height: 100%;
+    -webkit-transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    -moz-transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+}
+#editor.collapsed {
+    max-height: calc(100% - 16rem);
+    -webkit-transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    -moz-transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+    transition: max-height 0.5s cubic-bezier(0, 1, 0, 1);
+}
+.muted-black{
+    background: #232323 !important;
+}
+
+#console {
+    max-height: 16rem;
+    height: 100%;
+}
+
+#console.collapsed{
+    max-height: 1em;
+}
+.inverted.flat{
+    background: #1b1c1d;
+    color: rgba(255,255,255,.9);
+    margin: 0;
+}
+.footer {
+    height: 3rem;
+}
+
+#consoleContent{
+    visibility: hidden;
+    opacity: 0;
+    max-height: calc(100% - 1rem);
+    overflow-y: scroll;
+    overflow-x: visible;
+    flex-wrap: nowrap;
+    box-sizing:border-box;
+    transition: display 0s, opacity 0.8s linear;
+}
+
+#consoleContent.muted-black{
+    background: #141414 !important;
+    color: #f8f8f8;
+}
+
+#consoleContent code {
+    display: inherit;
+    padding-left: 2%;
+    padding-right: 1%;
+
+}
+.visible {
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.column.bordered.all {
+    border: 1px #cacaca;
+}
+.column.bordered.sides {
+    border-left: 1px solid #cacaca;
+    border-right: 1px solid #cacaca;
 }
