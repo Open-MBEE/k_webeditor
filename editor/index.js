@@ -9,7 +9,7 @@ editor.setOptions({
 });
  $('#send').on('click', function (){
          $.post('/solve/solve',{value: editor.getValue()} , function (data){
-           $('#consoleContent code').html(data);
+           $('#consoleContent code').html(JSON.stringify(data));
          })
     });
 
