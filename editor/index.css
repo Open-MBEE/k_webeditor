@@ -70,7 +70,7 @@
     visibility: visible !important;
     opacity: 1 !important;
     max-height: calc(100% - 1rem) !important;
-    height: calc(100% - 1rem);
+    height: calc(100% - 1rem) !important;
 }
 
 .column.bordered.all {
