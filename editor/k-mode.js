@@ -822,7 +822,7 @@ ace.define(
                 });
 
                 this.$worker.on("renderExpression", function (e) {
-                    const stripReq = (s) => { s.value = s.value.replace('req', '').replace(/\|\|/g, 'or').replace(/\&\&/g, 'and'); return s};
+                    const stripReq = (s) => { s.value = s.value.replace('req', '').replace(/\|\|/g, ' or ').replace(/\&\&/g, ' and '); return s};
                     const parseMath = e => {
                         try {
                             e.value = mathjs.parse(e.value);
@@ -834,16 +834,19 @@ ace.define(
                     };
                     const toTex = p => {p.value = p.value.toTex(); return p;};
                     const toExprDOM = p => p.children ? cardOut(p) : $('<p class="prettyExpr" data-line="'+p.line+'" data-col="'+p.col+'">$$'+p.value+'$$</p>');
-                    const cardOut = (obj) => {
-                        if(obj.children.length == 0){
-                            return '';
-                        }
-                        var card = $('<div class="ui fluid accordion segment"></div>');
+                    const cardOut = (obj, nest) => {
+                        // if(obj.children.length == 0){
+                        //     return '';
+                        // }
+                        var vUndef = c => typeof c.value == 'undefined';
+                        var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
                         var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> ${obj.name}</div>`);
                         var cardContent = $(`<div class="active content"></div>`);
-                        cardContent.append(`<i>${obj.children.length} expressions</i>`);
-                        let expressions = obj.children.map(stripReq).map(parseMath).map(toTex).map(toExprDOM);
+                        cardContent.append(`<div class="subtitle"><i>${obj.children.filter(p=>!vUndef(p)).length} expressions</i></div>`);
+                        let expressions = obj.children.filter(p=>!vUndef(p)).map(stripReq).map(parseMath).map(toTex).map(toExprDOM);
+                        let subCard = obj.children.filter(vUndef).map(p=>cardOut(p, true));
                         cardContent.append(expressions);
+                        cardContent.append(subCard);
                         card.append(cardTitle);
                         card.append(cardContent);
                         return card;
@@ -861,7 +864,7 @@ ace.define(
                     let expStr = e.data.map(cardOut);
 
                     $('#renderDiv').html(expStr);
-                    $('#renderDiv .ui.accordion').accordion();
+                    $('#renderDiv ui.accordion').accordion({ exclusive: false });
                     $('#renderDiv .prettyExpr').on('click', goToLineandCol);
 
                     MathJax.Hub.Queue(["Typeset", MathJax.Hub,"renderDiv"]);

@@ -60,22 +60,33 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
 
   class ExpressionListener extends ModelListener {
     constructor(parser, structure) {
-      super();
-      this.parser = parser;
-      this.structure = structure;
-      this.structure.push({name: 'Global', children: []})
+        super();
+        this.parser = parser;
+        this.structure = structure;
+        this.structure.push({name: 'Top Level', children: []})
+        this._inClass = 0;
+        this.findStackByIndex = function (index, arr) {
+            let last = arr.length - 1;
+            if (last < 0 ) {
+                return arr;
+            }
+            if (index == 0) {
+                return arr[last];
+            }
+            return this.findStackByIndex(index - 1, arr[last].children);
+        };
     }
 
     enterEntityDeclaration(ctx){
-      this._inClass = true;
       var tok = this.parser.getTokenStream();
       if(ctx.Identifier() != null){
           let idText = ctx.Identifier().toString();
-          this.structure.push({name: idText, children: []});
+          this.findStackByIndex(this._inClass, this.structure).children.push({name: idText, children: []});
+          this._inClass += 1;
       }
     }
     exitEntityDeclaration(ctx){
-      this._inClass = false
+      this._inClass -= 1;
     }
 
     enterMemberDeclaration(ctx){
@@ -83,39 +94,13 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         if(typeof ctx.constraint != 'undefined' && ctx.constraint() != null){
           let ctText = tok.getText(ctx.constraint());
             let obj = {value: ctText, line: ctx.constraint().start.line, col:ctx.constraint().start.column};
-            if(this._inClass){
-              let lastI = this.structure.length - 1;
-              if(typeof this.structure[lastI] != 'undefined'){
-                  this.structure[lastI].children.push(obj);
-              }
-            } else {
-                this.structure[0].children.push(obj);
-            }
+            this.findStackByIndex(this._inClass, this.structure).children.push(obj)
         }
     }
-    // exitMemberDeclaration(ctx){
-    //
-    // }
-    // enterFunctionDeclaration(ctx){
-    //       this.inFn = true;
-    //       this._tempBuilder = ctx.Identifier().getText();
-    // }
-    // enterConstraintDeclaration(ctx){
-    //
-    // }
-    // enterParamList(ctx){
-    //   if(this.inFn){
-    //           this._tempBuilder += '(' + ctx.getText() + ')';
-    //   }
-    // }
-    // exitFunctionDeclaration(ctx) {
-    //   this.functions.push(this._tempBuilder);
-    //   this._tempBuilder = undefined;
-    //   this.inFn = false;
-    // };
-    exitModel(ctx){
-    }
 
+    exitModel(ctx){
+      console.log(this.structure);
+    }
   }
   
 
