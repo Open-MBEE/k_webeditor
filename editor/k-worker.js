@@ -92,9 +92,9 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
     enterMemberDeclaration(ctx){
         var tok = this.parser.getTokenStream();
         if(typeof ctx.constraint != 'undefined' && ctx.constraint() != null){
-            var start_index = ctx.constraint.start.tokenIndex;
-            var stop_index = ctx.constraint.stop.tokenIndex;
-            var user_text = this.parser.getTokenStream({start: start_index, stop: stop_index});
+            var start_index = ctx.constraint().start.tokenIndex;
+            var stop_index = ctx.constraint().stop.tokenIndex;
+            var user_text = this.parser.getTokenStream().getText({start: start_index, stop: stop_index});
             let ctText = user_text
             let obj = {value: ctText, line: ctx.constraint().start.line, col:ctx.constraint().start.column};
             this.findStackByIndex(this._inClass, this.structure).children.push(obj)
