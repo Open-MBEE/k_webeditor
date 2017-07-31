@@ -46,7 +46,7 @@
 #consoleContent{
     visibility: hidden;
     opacity: 0;
-    height: auto;
+    height: 100%;
     max-height: 0;
     overflow-y: scroll;
     overflow-x: visible;
@@ -60,7 +60,7 @@
     color: #f8f8f8;
 }
 
-#consoleContent code {
+#consoleContent pre {
     display: inherit;
     padding-left: 2%;
     padding-right: 1%;
