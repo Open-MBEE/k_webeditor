@@ -57,7 +57,9 @@ $('#send').on('click', function (){
         $('#consoleContent pre').html(data.errors.join(''));
         try{
             JSON.parse(JSON.stringify(data.tree));
-            kTreeInstance.data = data.tree.tree;
+            const tojsTree = (n=>{n.active = false; n.children = n.children.map(tojsTree); n.toggled = true; return n;});
+            var nTree = data.tree.tree.map(tojsTree);
+            kTreeInstance.data = treeData.children = nTree;
         } catch (e){
             console.log(e);
         }
