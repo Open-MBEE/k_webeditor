@@ -14,12 +14,11 @@ aceEditor.setOptions({
 
 
  $('#send').on('click', function (){
-     console.log('clicker or something');
-         $.post('http://flipper.jpl.nasa.gov:8080/solve/solve',{value: aceEditor.getValue()} , function (data){
+         $.post('/solve/solve',{value: aceEditor.getValue()} , function (data){
            $('#consoleContent pre').html(data.errors.join(''));
            try{
                JSON.parse(JSON.stringify(data.tree));
-               treeData.children = data.tree.tree;
+               renderTree(data.tree.tree);
            } catch (e){
                console.log(e);
            }
@@ -42,6 +41,14 @@ var treeData = {name: 'Main',
     children: [],
 };
 
-const content = document.getElementById('containmentTree');
-ReactDom.render(React.createElement(KTree, {treeData: treeData}), content);
+function createTree(treeData){
+    return React.createElement(KTree, {treeData: treeData});
+}
+function renderTree(treeData){
+    const content = document.getElementById('containmentTree');
+    ReactDom.render(createTree(treeData), content);
+}
+
+renderTree(treeData);
+
 
