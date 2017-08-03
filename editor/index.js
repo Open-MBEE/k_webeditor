@@ -2,12 +2,12 @@ import ReactDom from 'react-dom';
 import React from 'react';
 import KTree from './tree.jsx';
 
-var editor = ace.edit('editor');
+var aceEditor = ace.edit('editor');
 ace.require("ace/ext/language_tools");
-editor.setTheme("ace/theme/twilight");
-editor.getSession().setMode('ace/mode/k-mode');
-editor.setOption("showPrintMargin", false);
-editor.setOptions({
+aceEditor.setTheme("ace/theme/twilight");
+aceEditor.getSession().setMode('ace/mode/k-mode');
+aceEditor.setOption("showPrintMargin", false);
+aceEditor.setOptions({
     enableBasicAutocompletion: true,
     // enableLiveAutocompletion: true
 });
@@ -15,8 +15,8 @@ editor.setOptions({
 
  $('#send').on('click', function (){
      console.log('clicker or something');
-         $.post('flipper.jpl.nasa.gov:8080/solve/solve',{value: editor.getValue()} , function (data){
-           $('#consoleContent code').html(data.errors.join(''));
+         $.post('/solve/solve',{value: aceEditor.getValue()} , function (data){
+           $('#consoleContent pre').html(data.errors.join(''));
            try{
                JSON.parse(JSON.stringify(data.tree));
                treeData.children = data.tree;
