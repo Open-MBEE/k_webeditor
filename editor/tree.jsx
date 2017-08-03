@@ -56,6 +56,10 @@ class KTree extends React.Component {
         this.setState({cursor: node});
     }
 
+    componentWillReceiveProps(props){
+        this.props = props.treeData;
+    }
+
     render(){
         const {data: stateData, cursor} = this.state;
         return (
