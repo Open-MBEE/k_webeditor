@@ -12,24 +12,6 @@ aceEditor.setOptions({
     // enableLiveAutocompletion: true
 });
 
-function toggleConsole(){
-    $('#consoleTitle div i.up').toggleClass('down');
-    $('#editor').toggleClass('collapsed');
-    $('#console').toggleClass('collapsed');
-    $('#consoleContent').toggleClass('visible');
-}
-
-$('.ui.accordion').accordion('refresh');
-
-$('#consoleTitle').on('click', toggleConsole);
-
-var treeData = {name: 'Main',
-    toggled: true,
-    children: [],
-};
-
-var kTreeInstance = new KTreeDOM(treeData, document.getElementById('containmentTree'));
-
 class KTreeDOM {
     constructor(data, container){
         this._container = container;
@@ -49,6 +31,25 @@ class KTreeDOM {
         ReactDOM.unmountComponentAtNode(this._container);
     }
 }
+
+function toggleConsole(){
+    $('#consoleTitle div i.up').toggleClass('down');
+    $('#editor').toggleClass('collapsed');
+    $('#console').toggleClass('collapsed');
+    $('#consoleContent').toggleClass('visible');
+}
+
+$('.ui.accordion').accordion('refresh');
+
+$('#consoleTitle').on('click', toggleConsole);
+
+var treeData = {name: 'Main',
+    toggled: true,
+    children: [],
+};
+
+var kTreeInstance = new KTreeDOM(treeData, document.getElementById('containmentTree'));
+
 
 $('#send').on('click', function (){
     $.post('/solve/solve',{value: aceEditor.getValue()} , function (data){
