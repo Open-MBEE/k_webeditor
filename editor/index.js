@@ -12,21 +12,8 @@ aceEditor.setOptions({
     // enableLiveAutocompletion: true
 });
 
-
- $('#send').on('click', function (){
-      $.post('/solve/solve',{value: aceEditor.getValue()} , function (data){
-           $('#consoleContent pre').html(data.errors.join(''));
-           try{
-               JSON.parse(JSON.stringify(data.tree));
-               renderTree(data.tree.tree);
-           } catch (e){
-               console.log(e);
-           }
-         })
-    });
-
 function toggleConsole(){
-    $('#consoleTitle div i.up').toggleClass('down')
+    $('#consoleTitle div i.up').toggleClass('down');
     $('#editor').toggleClass('collapsed');
     $('#console').toggleClass('collapsed');
     $('#consoleContent').toggleClass('visible');
@@ -41,14 +28,36 @@ var treeData = {name: 'Main',
     children: [],
 };
 
-function createTree(treeData){
-    return React.createElement(KTree, {treeData: treeData});
+var kTreeInstance = new KTreeDOM(treeData, document.getElementById('containmentTree'));
+
+class KTreeDOM {
+    constructor(data, container){
+        this._container = container;
+        this._data = data;
+    }
+    set data(data){
+        this._data = data;
+        this._render();
+    }
+    _render() {
+        ReactDOM.render(React.createElement(KTree, {treeData: this._data}), this._container);
+    }
+    get container(){
+        return this._container
+    }
+    destroy() {
+        ReactDOM.unmountComponentAtNode(this._container);
+    }
 }
-function renderTree(treeData){
-    const content = document.getElementById('containmentTree');
-    ReactDom.render(createTree(treeData), content);
-}
 
-renderTree(treeData);
-
-
+$('#send').on('click', function (){
+    $.post('/solve/solve',{value: aceEditor.getValue()} , function (data){
+        $('#consoleContent pre').html(data.errors.join(''));
+        try{
+            JSON.parse(JSON.stringify(data.tree));
+            kTreeInstance.data = data.tree.tree;
+        } catch (e){
+            console.log(e);
+        }
+    })
+});
