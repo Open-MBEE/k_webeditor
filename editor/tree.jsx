@@ -57,7 +57,7 @@ class KTree extends React.Component {
     }
 
     componentWillReceiveProps(props){
-        this.props = props.treeData;
+        this.state = props.treeData;
     }
 
     render(){
