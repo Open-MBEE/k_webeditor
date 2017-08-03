@@ -16,7 +16,7 @@ class KTreeDOM {
     constructor(data, container){
         this._container = container;
         this._data = data;
-        _render();
+        this._render();
     }
     set data(data){
         this._data = data;
