@@ -6,8 +6,10 @@
 }
 
 .full-view {
-    height: calc(100vh - 3rem);
+    height: 100%
+    max-height: calc(100vh - 3rem);
     background: rgb(33, 37, 43) none repeat scroll 0% 0%;
+    overflow-y: scroll;
 }
 
 #editor {
