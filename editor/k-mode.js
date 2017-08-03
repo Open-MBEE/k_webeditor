@@ -864,7 +864,7 @@ ace.define(
                     let expStr = e.data.map(cardOut);
 
                     $('#renderDiv').html(expStr);
-                    $('#renderDiv ui.accordion').accordion({ exclusive: false });
+                    $('#renderDiv .ui.accordion').accordion({ exclusive: false });
                     $('#renderDiv .prettyExpr').on('click', goToLineandCol);
 
                     MathJax.Hub.Queue(["Typeset", MathJax.Hub,"renderDiv"]);

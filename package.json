@@ -20,12 +20,20 @@
   "license": "ISC",
   "dependencies": {
     "antlr4": "^4.7.0",
+    "babel": "^6.23.0",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-treebeard": "^2.0.3",
+    "react-ui-tree": "^3.0.0",
     "semantic-ui": "^2.2.11",
     "shelljs": "^0.7.8"
   },
   "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-react": "^6.24.1",
     "browserify": "^14.4.0",
     "chai": "^4.1.0",
     "gulp": "^3.9.1",
@@ -36,6 +44,7 @@
     "vinyl-named": "^1.1.0",
     "vinyl-source-stream": "^1.1.0",
     "vinyl-transform": "^1.0.0",
+    "webpack": "^3.4.1",
     "webpack-stream": "^3.2.0"
   }
 }

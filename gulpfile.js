@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var named = require('vinyl-named');
-var webpack = require('webpack-stream');
+var webpack = require('webpack');
+var webpackStream = require('webpack-stream');
 var replace = require("gulp-replace");
 
 
@@ -31,7 +32,23 @@ gulp.task('antlr', function () {
 gulp.task('main', function () {
     return gulp.src('./editor/index.js')
         .pipe(named())
-        .pipe(webpack()).pipe(gulp.dest('./editor/build/main/'))
+        .pipe(webpackStream({
+            // devtool: 'eval-source-map',
+            module: {
+                loaders: [
+                    {
+                        test: /\.jsx?$|\.js?$/,
+                        exclude: /node_modules/,
+                        loader: 'babel-loader',
+                        query:
+                            {
+                                presets:['react']
+                            }
+                    }
+                ]
+            }
+        }, webpack))
+        .pipe(gulp.dest('./editor/build/main/'))
 });
 
 gulp.task('parser', function () {

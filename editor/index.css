@@ -7,10 +7,11 @@
 
 .full-view {
     height: calc(100vh - 3rem);
+    background: rgb(33, 37, 43) none repeat scroll 0% 0%;
 }
 
 #editor {
-    max-height: calc(100% - 1rem);
+    max-height: calc(100% - 3rem);
     height: 100%;
     -webkit-transition: max-height 0.2s cubic-bezier(0, 1, 0, 1);
     -moz-transition: max-height 0.2s cubic-bezier(0, 1, 0, 1);
@@ -39,6 +40,7 @@
     color: rgba(255,255,255,.9);
     margin: 0;
 }
+
 .footer {
     height: 3rem;
 }
@@ -74,9 +76,15 @@
 }
 
 .column.bordered.all {
-    border: 1px #cacaca;
+    border: 1px #434343;
 }
 .column.bordered.sides {
-    border-left: 1px solid #cacaca;
-    border-right: 1px solid #cacaca;
+    border-left: 1px solid #434343;
+    border-right: 1px solid #434343;
+}
+
+#renderDiv{
+    padding-right: 2rem;
+    padding-left: 1rem;
+    padding-top: 1rem;
 }
