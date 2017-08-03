@@ -4,16 +4,23 @@
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-
-.full-view {
-    height: calc(100vh - 3rem);
-    max-height: calc(100vh - 3rem);
-    background: rgb(33, 37, 43) none repeat scroll 0% 0%;
-    overflow-y: scroll;
+.footer{
+    max-height: 3rem;
 }
 
+.full-view {
+    height: calc(100vh - 2rem);
+    max-height: calc(100vh - 2rem);
+    background: rgb(33, 37, 43) none repeat scroll 0% 0%;
+    overflow-y: auto;
+}
+
+.horizontal.flat.divider{
+    max-height: 1rem!important;
+    line-height: 0.8rem!important;
+}
 #editor {
-    max-height: calc(100% - 3rem);
+    max-height: calc(100% - 1rem);
     height: 100%;
     -webkit-transition: max-height 0.2s cubic-bezier(0, 1, 0, 1);
     -moz-transition: max-height 0.2s cubic-bezier(0, 1, 0, 1);
@@ -35,7 +42,7 @@
 }
 
 #console.collapsed{
-    max-height: 1em;
+    max-height: 1rem;
 }
 .inverted.flat{
     background: #1b1c1d;
@@ -52,7 +59,7 @@
     opacity: 0;
     height: 100%;
     max-height: 0;
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: visible;
     flex-wrap: nowrap;
     box-sizing:border-box;
