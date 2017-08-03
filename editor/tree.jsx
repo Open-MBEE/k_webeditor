@@ -42,18 +42,18 @@ class KTree extends React.Component {
     }
 
     onToggle(node, toggled){
-        const {cursor} = this.state;
-
-        if (cursor){
-            cursor.active = false;
-        }
-
-        node.active= true;
-
-        if(node.children){
-            node.toggled = toggled;
-        }
-        this.setState({cursor: node});
+        // const {cursor} = this.state;
+        //
+        // if (cursor){
+        //     cursor.active = false;
+        // }
+        //
+        // node.active= true;
+        //
+        // if(node.children){
+        //     node.toggled = toggled;
+        // }
+        // this.setState({cursor: node});
     }
 
     componentWillReceiveProps(props){
