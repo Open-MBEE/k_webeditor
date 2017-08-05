@@ -43,7 +43,7 @@ function init(){
 
     $('#consoleTitle').on('click', toggleConsole);
     $('#send').on('click', function (){
-        $.post('/solve/solve',{value: aceEditor.getValue()} , function (data){
+        $.post('/solve/solve',{value: window.aceEditor.getValue()} , function (data){
             $('#consoleContent pre').html(data.errors.join(''));
             try{
                 JSON.parse(JSON.stringify(data.tree));
