@@ -3,6 +3,7 @@ var named = require('vinyl-named');
 var webpack = require('webpack');
 var webpackStream = require('webpack-stream');
 var replace = require("gulp-replace");
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 
 const parserDir = './build/parser/';
@@ -26,6 +27,25 @@ gulp.task('antlr', function () {
                 net: "empty",
                 fs: "empty"
             },
+            module: {
+                loaders: [
+                    {
+                        test: /\.jsx?$|\.js?$/,
+                        exclude: /node_modules/,
+                        loader: 'babel-loader',
+                        query:
+                            {
+                                presets:[,'es2015']
+                            }
+                    }
+                ]
+            },
+            plugins: [new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: JSON.stringify('production')
+                }
+            }),
+                new UglifyJSPlugin()]
         })).pipe(gulp.dest('./editor/build/antlr4/'))
 });
 
@@ -41,11 +61,18 @@ gulp.task('main', function () {
                         loader: 'babel-loader',
                         query:
                             {
-                                presets:['react']
+                                presets:['react','es2015']
                             }
                     }
                 ]
-            }
+            },
+            devtool: ' cheap-module-source-map',
+            plugins: [new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: JSON.stringify('production')
+                }
+            }),
+                new UglifyJSPlugin()]
         }, webpack))
         .pipe(gulp.dest('./editor/build/main/'))
 });
@@ -64,6 +91,25 @@ gulp.task('parser', function () {
                 net: "empty",
                 fs: "empty"
             },
+            module: {
+                loaders: [
+                    {
+                        test: /\.jsx?$|\.js?$/,
+                        exclude: /node_modules/,
+                        loader: 'babel-loader',
+                        query:
+                            {
+                                presets:['es2015']
+                            }
+                    }
+                ]
+            },
+            plugins: [new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: JSON.stringify('production')
+                }
+            }),
+                new UglifyJSPlugin()]
         })).pipe(gulp.dest('./editor/build/parser/'))
 });
 gulp.task('watch',function(){
