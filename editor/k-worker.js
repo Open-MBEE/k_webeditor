@@ -63,7 +63,7 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
             super();
             this.parser = parser;
             this.structure = structure;
-            this.structure.push({name: 'Top Level', children: []});
+            this.structure.push({name: 'K', start:{line: 0, col: 0}, children: []});
             this._inScope = 0;
             this.findLastLeafByDepth = function (index, arr) {
                 let last = arr.length - 1;
