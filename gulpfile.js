@@ -53,6 +53,7 @@ gulp.task('main', function () {
     return gulp.src('./editor/index.js')
         .pipe(named())
         .pipe(webpackStream({
+            devtool: 'cheap-module-source-map',
             module: {
                 loaders: [
                     {
@@ -66,7 +67,6 @@ gulp.task('main', function () {
                     }
                 ]
             },
-            devtool: ' cheap-module-source-map',
             plugins: [new webpack.DefinePlugin({
                 'process.env': {
                     NODE_ENV: JSON.stringify('production')
