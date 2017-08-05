@@ -37,23 +37,23 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
   }
 
   // class for gathering errors and posting them to ACE editor
-  var AnnotatingErrorListener = function (annotations) {
-    antlr4.error.ErrorListener.call(this);
-    this.annotations = annotations;
-    return this;
-  };
 
-  AnnotatingErrorListener.prototype = Object.create(antlr4.error.ErrorListener.prototype);
-  AnnotatingErrorListener.prototype.constructor = AnnotatingErrorListener;
 
-  AnnotatingErrorListener.prototype.syntaxError = function (recognizer, offendingSymbol, line, column, msg, e) {
-    this.annotations.push({
-      row: line - 1,
-      column: column,
-      text: msg,
-      type: "error"
-    });
-  };
+    class AnnotatingErrorListener extends antlr4.error.ErrorListener {
+        constructor(annotations){
+            super();
+            this.annotations = annotations;
+            return this;
+        }
+        syntaxError(recognizer, offendingSymbol, line, column, msg, e) {
+            this.annotations.push({
+                row: line - 1,
+                column: column,
+                text: msg,
+                type: "error"
+            });
+        };
+    }
 
 
   // class for listening for incoming expressions
@@ -64,8 +64,8 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         this.parser = parser;
         this.structure = structure;
         this.structure.push({name: 'Top Level', children: []})
-        this._inClass = 0;
-        this.findStackByIndex = function (index, arr) {
+        this._inScope = 0;
+        this.findLastLeafByDepth = function (index, arr) {
             let last = arr.length - 1;
             if (last < 0 ) {
                 return arr;
@@ -73,32 +73,69 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
             if (index == 0) {
                 return arr[last];
             }
-            return this.findStackByIndex(index - 1, arr[last].children);
+            return this.findLastLeafByDepth(index - 1, arr[last].children);
         };
     }
 
     enterEntityDeclaration(ctx){
       var tok = this.parser.getTokenStream();
       if(ctx.Identifier() != null){
-          let idText = ctx.Identifier().toString();
-          this.findStackByIndex(this._inClass, this.structure).children.push({name: idText, children: []});
-          this._inClass += 1;
+          ctx.Identifier().forEach(i=>{
+              let idText = i.toString();
+              this.findLastLeafByDepth(this._inScope, this.structure).children.push({name: idText, line: i.symbol.line, col:i.symbol.column,  type: 'class', children: []});
+          })
+
+          this._inScope += 1;
       }
     }
     exitEntityDeclaration(ctx){
-      this._inClass -= 1;
+      this._inScope -= 1;
     }
 
     enterMemberDeclaration(ctx){
         var tok = this.parser.getTokenStream();
-        if(typeof ctx.constraint != 'undefined' && ctx.constraint() != null){
-            var start_index = ctx.constraint().start.tokenIndex;
-            var stop_index = ctx.constraint().stop.tokenIndex;
-            var user_text = this.parser.getTokenStream().getText({start: start_index, stop: stop_index});
-            let ctText = user_text
-            let obj = {value: ctText, line: ctx.constraint().start.line, col:ctx.constraint().start.column};
-            this.findStackByIndex(this._inClass, this.structure).children.push(obj)
+        var leafScope = this.findLastLeafByDepth(this._inScope, this.structure);
+        let ctD = this._buildLeaf(ctx.constraint(),'constraint');
+        let extD = this._buildLeaf(ctx.expression(),'expression');
+        let propD = this._buildLeaf(ctx.propertyDeclaration(),'property');
+        let funcD = this._buildLeaf(ctx.functionDeclaration(),'function');
+
+        if(ctD != null){
+            leafScope.children.push(ctD);
         }
+        if(extD != null){
+            leafScope.children.push(extD);
+        }
+        if(propD != null){
+            leafScope.children.push(propD);
+        }
+        if(propD != null){
+            leafScope.children.push(funcD);
+        }
+    }
+
+    _buildLeaf(ctx, type) {
+        if (typeof ctx != 'undefined' && ctx != null) {
+            let name, kType;
+            if (ctx.Identifier && ctx.Identifier()){
+                name = ctx.Identifier().toString();
+            }
+            if(ctx.type && ctx.type()){
+                let t=ctx.type();
+                var start_index = t.start.tokenIndex;
+                var stop_index = t.start.tokenIndex;
+                var typeText = this.parser.getTokenStream().getText({start: start_index, stop: stop_index});
+                kType = typeText;
+            }
+
+            var start_index = ctx.start.tokenIndex;
+            var stop_index = ctx.stop.tokenIndex;
+            var user_text = this.parser.getTokenStream().getText({start: start_index, stop: stop_index});
+            let value = user_text;
+            let obj = {name: name, value: value, kType: kType,type: type, line: ctx.start.line, col: ctx.start.column};
+            return obj;
+        }
+        return null;
     }
 
     exitModel(ctx){
@@ -139,10 +176,10 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         var value = this.doc.getValue();
         var annotations = validate(value);
         if (annotations.length == 0) {
-            var expressions = listenForExpressions(value);
-            this.sender.emit("renderExpression", expressions)
+            var declarations = listenForExpressions(value);
+            this.sender.emit('parseDecl', declarations)
         }
-        this.sender.emit("annotate", annotations);
+        this.sender.emit('annotate', annotations);
     };
 
     this.onUpdate = _.debounce(runListeners, 500)
