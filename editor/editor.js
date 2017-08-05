@@ -73,7 +73,7 @@ function findScope(node, tree){
     };
     const findMinScope = (scopes) => {
         if (scopes.length === 0) {
-            return null;
+            return false;
         }
         const tDist = (x,y)=>Math.sqrt(Math.pow(x,2)+1000*Math.pow(y,2)); //hackish, line dist has superior weight
         var min = scopes[0].scope;
@@ -92,9 +92,6 @@ function findScope(node, tree){
     };
 
     let scopes = dfs(tree[0],'child.children && child.children.length > 0',[]);
-    if(scopes.length == 0){
-        return tree[0];
-    }
     let distances = [];
     for(let scope of scopes){
         let endD = endDist(node,scope);
@@ -103,10 +100,8 @@ function findScope(node, tree){
         }
         distances.push({scope: scope, distance: calcDistance(node,scope)});
     }
-    if(distances.length == 0){
-        return tree[0];
-    }
-    return findMinScope(distances);
+    let scope = findMinScope(distances);
+    return scope ? scope : tree[0];
 
 }
 
