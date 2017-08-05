@@ -70,8 +70,8 @@ class KTree extends React.Component {
 
         this.setState({cursor: node});
         var editor = ace.edit('editor');
-        let l = node['line'];
-        let c = node['char'];
+        let l = node.start.line;
+        let c = node.start.col;
         editor.focus();
         editor.gotoLine(l, c, true);
         console.log(node);
