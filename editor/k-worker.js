@@ -93,7 +93,6 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
     }
 
     enterMemberDeclaration(ctx){
-        var tok = this.parser.getTokenStream();
         var leafScope = this.findLastLeafByDepth(this._inScope, this.structure);
         let ctD = this._buildLeaf(ctx.constraint(),'constraint');
         let extD = this._buildLeaf(ctx.expression(),'expression');
@@ -115,6 +114,7 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
     }
 
     _buildLeaf(ctx, type) {
+        var tok = this.parser.getTokenStream();
         if (typeof ctx != 'undefined' && ctx != null) {
             let name, kType;
             if (ctx.Identifier && ctx.Identifier()){
@@ -124,13 +124,13 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
                 let t=ctx.type();
                 var start_index = t.start.tokenIndex;
                 var stop_index = t.start.tokenIndex;
-                var typeText = this.parser.getTokenStream().getText({start: start_index, stop: stop_index});
+                var typeText = tok.getText({start: start_index, stop: stop_index});
                 kType = typeText;
             }
 
             var start_index = ctx.start.tokenIndex;
             var stop_index = ctx.stop.tokenIndex;
-            var user_text = this.parser.getTokenStream().getText({start: start_index, stop: stop_index});
+            var user_text = tok.getText({start: start_index, stop: stop_index});
             let value = user_text;
             let obj = {name: name, value: value, kType: kType,type: type, line: ctx.start.line, col: ctx.start.column};
             return obj;

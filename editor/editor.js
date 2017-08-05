@@ -11,11 +11,29 @@ var kCompleter = {
         let prevTok = thisTok > 0 ? toks[thisTok-1] : toks[thisTok];
         if(prevTok.type === "punctuation.member"){
             let members = findType(session,toks[thisTok-2].value).children.filter(c=>c.type == 'function' || c.type == 'property');
-            keywords = {}
+            keywords = {};
             for(let m of members){
                 keywords[m.name] = m.type;
             }
-        }
+        } else {
+            const reduceToProps = (list, nodes) => {
+                if (!Array.isArray(nodes)) {
+                    list.push(nodes);
+                    if (nodes.children && nodes.children.length > 0) {
+                        reduceToProps(list, nodes.children);
+                    }
+                } else {
+                    for (let node of nodes) {
+                        reduceToProps(list, node);
+                    }
+                }
+                return list;
+            };
+            let topLevel = session.$struct.reduce(reduceToProps, []).filter(n=>typeof n.name != 'undefined' && n.type != 'expression');
+            for(let elm of topLevel){
+                keywords[elm.name] = elm.type;
+            }
+        };
         if(prevTok){
             let words = [];
                 for(let k in keywords){
