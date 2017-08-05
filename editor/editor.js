@@ -72,7 +72,7 @@ function dfs(root, query){
 }
 
 function initEditor () {
-    var aceEditor = ace.edit('editor');
+    var aceEditor = window.aceEditor = ace.edit('editor');
     var lang = ace.require("ace/ext/language_tools");
     ace.config.setModuleUrl(
         'ace/mode/k-mode', './k-mode.js'
