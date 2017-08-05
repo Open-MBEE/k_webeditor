@@ -47,7 +47,7 @@ function init(){
             $('#consoleContent pre').html(data.errors.join(''));
             try{
                 JSON.parse(JSON.stringify(data.tree));
-                const tojsTree = (n=>{n.active = false; n.children = n.children.map(tojsTree); n.toggled = true; return n;});
+                const tojsTree = (n=>{n.active = false; n.children = n.children.map(tojsTree); n.toggled = true; return n;}).filter(n=>name.length > 0);
                 var nTree = data.tree.tree.map(tojsTree);
                 kTreeInstance.data = treeData.children = nTree;
             } catch (e){
