@@ -94,7 +94,7 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         enterFunctionDeclaration(ctx) {
             var leafScope = this.findLastLeafByDepth(this._inScope, this.structure);
             var fnD = this._buildLeaf(ctx, 'function');
-            if (classD != null) {
+            if (fnD != null) {
                 fnD.children = [];
                 leafScope.children.push(fnD);
                 this._inScope += 1;
@@ -110,7 +110,6 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
             let ctD = this._buildLeaf(ctx.constraint(), 'constraint');
             let extD = this._buildLeaf(ctx.expression(), 'expression');
             let propD = this._buildLeaf(ctx.propertyDeclaration(), 'property');
-            // let funcD = this._buildLeaf(ctx.functionDeclaration(),'function');
 
             if (ctD != null) {
                 leafScope.children.push(ctD);
@@ -120,9 +119,6 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
             }
             if (propD != null) {
                 leafScope.children.push(propD);
-            }
-            if (funcD != null) {
-                leafScope.children.push(funcD);
             }
         }
 
