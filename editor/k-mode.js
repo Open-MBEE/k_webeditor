@@ -871,6 +871,13 @@ ace.define(
 
                 this.$worker.on("parseDecl", function (e) {
                     session.$struct = e.data;
+                    const tojsTree = (n=>{n.active = false; if(n.children){
+                        n.children = n.children.map(tojsTree);
+                    }
+                    n.toggled = true;
+                    return n;}
+                    );
+                    session.$tree.data = e.data.map(tojsTree);
                     session.$mode.renderExpressions(e.data);
                 });
 

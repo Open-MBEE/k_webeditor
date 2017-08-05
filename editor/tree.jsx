@@ -18,7 +18,21 @@ var styles =  {
 // Tree Code - Define Styling
 
 decorators.Header = ({style, node}) => {
-    const iconType = node.children ?  'file folder outline' : 'file code outline';
+    var iconType;
+    switch(node.type){
+        case 'class':
+            iconType='file text outline';
+            break;
+        case 'property':
+            iconType='chevron right outline';
+            break;
+        case 'constraint':
+            iconType='file code outline';
+            break;
+        default:
+            iconType='cogs';
+
+    }
     const iconClass = `${iconType} icon`;
     const iconStyle = {marginRight: '5px'};
 
@@ -36,36 +50,40 @@ decorators.Header = ({style, node}) => {
 class KTree extends React.Component {
     constructor(props) {
         super();
-
-        this.state = props.treeData;
+        this.state = {data: props.treeData};
         this.onToggle = this.onToggle.bind(this);
     }
-
+    componentWillReceiveProps(props) {
+        this.state = {data: props.treeData};
+    }
     onToggle(node, toggled){
-        // const {cursor} = this.state;
-        //
-        // if (cursor){
-        //     cursor.active = false;
-        // }
-        //
-        // node.active= true;
-        //
-        // if(node.children){
-        //     node.toggled = toggled;
-        // }
-        // this.setState({cursor: node});
+        const {cursor} = this.state;
+
+        if (cursor) {
+            cursor.active = false;
+        }
+
+        node.active = true;
+        if (node.children) {
+            node.toggled = toggled;
+        }
+
+        this.setState({cursor: node});
+        var editor = ace.edit('editor');
+        let l = node.start['line'];
+        let c = node.start['col'];
+        editor.focus();
+        editor.gotoLine(l, c, true);
+        console.log(node);
     }
 
-    componentWillReceiveProps(props){
-        this.state = props.treeData;
-    }
 
     render(){
         const {data: stateData, cursor} = this.state;
         return (
             <StyleRoot>
                 <div style={styles.component}>
-                    <Treebeard data={this.state}
+                    <Treebeard data={stateData}
                                decorators={decorators}
                                onToggle={this.onToggle}/>
                 </div>

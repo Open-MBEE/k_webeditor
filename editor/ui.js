@@ -56,6 +56,8 @@ function init(){
         })
     });
 
+    return {kTreeInstance};
+
 }
 
 export {init}

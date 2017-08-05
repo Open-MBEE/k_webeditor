@@ -1,7 +1,7 @@
 importScripts("dependencies/ace-worker/worker.js");
 importScripts("dependencies/ace-builds/src-noconflict/ace.js");
 importScripts("dependencies/ace-worker/mirror.js");
-importScripts("dependencies/lodash.js")
+importScripts("dependencies/lodash.js");
 ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop", "ace/worker/mirror"], function (require, exports, module) {
   "use strict";
 
