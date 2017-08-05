@@ -541,6 +541,7 @@ ace.define(
         "require",
         "exports",
         "module",
+        "ace/lodash",
         "ace/lib/oop",
         "ace/mode/text",
         "ace/ext/antlr4/token-type-map",
@@ -569,14 +570,16 @@ ace.define(
             this.$outdent = new MatchingBraceOutdent();
             this.$behaviour = new CstyleBehaviour();
             this.foldingRules = new CStyleFoldMode();
+            this.$globalClass = [{name: 'Timepoint', name: 'Timeline'}];
+            this.$id = "ace/mode/k-mode";
+            this.lineCommentStart = "---";
+            this.blockComment = { start: "===", end: "===" };
+            // this.$highlightRules = false;
         };
         oop.inherits(MyMode, TextMode);
 
         (function () {
 
-            this.$id = "ace/mode/k-mode";
-            this.lineCommentStart = "---";
-            this.blockComment = { start: "===", end: "===" };
 
             this.toggleCommentLines = function(state, session, startRow, endRow) {
                 var doc = session.doc;
@@ -808,6 +811,51 @@ ace.define(
                 this.$outdent.autoOutdent(doc, row);
             };
 
+            this.renderExpressions = function (expr){
+                const stripReq = (s) => { s.value = s.value.replace('req', '').replace(/\|\|/g, ' or ').replace(/\&\&/g, ' and '); return s};
+                const parseMath = e => {
+                    try {
+                        e.value = mathjs.parse(e.value);
+                        return e
+                    } catch (err) {
+                        e.value = mathjs.parse('0');
+                        return e
+                    }
+                };
+                const toTex = p => {p.value = p.value.toTex(); return p;};
+                const toExprDOM = p => p.children ? cardOut(p) : $('<p class="prettyExpr" data-line="'+p.line+'" data-col="'+p.col+'">$$'+p.value+'$$</p>');
+                const cardOut = (obj, nest) => {
+                    var isExpr = c => c.type == 'expression' || c.type == 'constraint';
+                    var isClass = c => c.type == "class";
+                    var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
+                    var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> ${obj.name}</div>`);
+                    var cardContent = $(`<div class="active content"></div>`);
+                    cardContent.append(`<div class="subtitle"><i>${obj.children.filter(p=>isExpr(p)).length} expressions</i></div>`);
+                    let expressions = obj.children.filter(p=>isExpr(p)).map(stripReq).map(parseMath).map(toTex).map(toExprDOM);
+                    let subCard = obj.children.filter(isClass).map(p=>cardOut(p, true));
+                    cardContent.append(expressions);
+                    cardContent.append(subCard);
+                    card.append(cardTitle);
+                    card.append(cardContent);
+                    return card;
+                };
+                const goToLineandCol = function (e){
+                    var editor = ace.edit('editor');
+                    let l = $(this).data('line');
+                    let c = $(this).data('col');
+                    // editor.resize(true);
+                    editor.focus();
+                    editor.gotoLine(l, c, true);
+
+                };
+
+                let expStr = expr.map(cardOut);
+                $('#renderDiv').html(expStr);
+                $('#renderDiv .ui.accordion').accordion({ animateChildren: false, exclusive: false });
+                $('#renderDiv .prettyExpr').on('click', goToLineandCol);
+
+                MathJax.Hub.Queue(["Typeset", MathJax.Hub,"renderDiv"]);
+            };
 
             var WorkerClient = require("ace/worker/worker_client").WorkerClient;
             this.createWorker = function (session) {
@@ -821,53 +869,9 @@ ace.define(
                     session.setAnnotations(e.data);
                 });
 
-                this.$worker.on("renderExpression", function (e) {
-                    const stripReq = (s) => { s.value = s.value.replace('req', '').replace(/\|\|/g, ' or ').replace(/\&\&/g, ' and '); return s};
-                    const parseMath = e => {
-                        try {
-                            e.value = mathjs.parse(e.value);
-                            return e
-                        } catch (err) {
-                            e.value = mathjs.parse('0');
-                            return e
-                        }
-                    };
-                    const toTex = p => {p.value = p.value.toTex(); return p;};
-                    const toExprDOM = p => p.children ? cardOut(p) : $('<p class="prettyExpr" data-line="'+p.line+'" data-col="'+p.col+'">$$'+p.value+'$$</p>');
-                    const cardOut = (obj, nest) => {
-                        // if(obj.children.length == 0){
-                        //     return '';
-                        // }
-                        var vUndef = c => typeof c.value == 'undefined';
-                        var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
-                        var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> ${obj.name}</div>`);
-                        var cardContent = $(`<div class="active content"></div>`);
-                        cardContent.append(`<div class="subtitle"><i>${obj.children.filter(p=>!vUndef(p)).length} expressions</i></div>`);
-                        let expressions = obj.children.filter(p=>!vUndef(p)).map(stripReq).map(parseMath).map(toTex).map(toExprDOM);
-                        let subCard = obj.children.filter(vUndef).map(p=>cardOut(p, true));
-                        cardContent.append(expressions);
-                        cardContent.append(subCard);
-                        card.append(cardTitle);
-                        card.append(cardContent);
-                        return card;
-                    };
-
-                    const goToLineandCol = function (e){
-                        var editor = ace.edit('editor');
-                        let l = $(this).data('line');
-                        let c = $(this).data('col');
-                        // editor.resize(true);
-                        editor.focus();
-                        editor.gotoLine(l, c, true);
-
-                    };
-                    let expStr = e.data.map(cardOut);
-
-                    $('#renderDiv').html(expStr);
-                    $('#renderDiv .ui.accordion').accordion({ animateChildren: false, exclusive: false });
-                    $('#renderDiv .prettyExpr').on('click', goToLineandCol);
-
-                    MathJax.Hub.Queue(["Typeset", MathJax.Hub,"renderDiv"]);
+                this.$worker.on("parseDecl", function (e) {
+                    session.$struct = e.data;
+                    session.$mode.renderExpressions(e.data);
                 });
 
                 this.$worker.on("terminate", function () {

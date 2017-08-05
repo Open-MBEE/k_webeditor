@@ -15,7 +15,7 @@ return gulp.src('./parser/Model.g4') // Relies on .g4 extension!
 gulp.task('antlr', function () {
     return gulp.src('./node_modules/antlr4/index.js')
         .pipe(named())
-        .pipe(webpack({
+        .pipe(webpackStream({
             output:{
                 filename: '[name].js',
                 libraryTarget: 'umd',
@@ -33,7 +33,6 @@ gulp.task('main', function () {
     return gulp.src('./editor/index.js')
         .pipe(named())
         .pipe(webpackStream({
-            // devtool: 'eval-source-map',
             module: {
                 loaders: [
                     {
@@ -54,7 +53,7 @@ gulp.task('main', function () {
 gulp.task('parser', function () {
     return gulp.src('./parser/index.js')
         .pipe(named())
-        .pipe(webpack({
+        .pipe(webpackStream({
             output:{
                 filename: '[name].js',
                 libraryTarget: 'umd',
@@ -67,5 +66,13 @@ gulp.task('parser', function () {
             },
         })).pipe(gulp.dest('./editor/build/parser/'))
 });
+gulp.task('watch',function(){
+    gulp.watch('./editor/editor.js', ['main']);
+    gulp.watch('./editor/ui.js', ['main']);
+    gulp.watch('./editor/index.js', ['main']);
+});
 
-gulp.task('default', ['antlr','parser', 'main']);
+gulp.task('build', ['antlr','parser', 'main']);
+gulp.task('default', ['watch']);
+
+
