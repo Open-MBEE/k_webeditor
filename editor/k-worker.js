@@ -98,6 +98,7 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         let ctD = this._buildLeaf(ctx.constraint(),'constraint');
         let extD = this._buildLeaf(ctx.expression(),'expression');
         let propD = this._buildLeaf(ctx.propertyDeclaration(),'property');
+        let funcD = this._buildLeaf(ctx.functionDeclaration(),'function');
 
         if(ctD != null){
             leafScope.children.push(ctD);
@@ -107,6 +108,9 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         }
         if(propD != null){
             leafScope.children.push(propD);
+        }
+        if(propD != null){
+            leafScope.children.push(funcD);
         }
     }
 
