@@ -38,7 +38,7 @@ var kCompleter = {
                 keywords[elm.name] = elm.type;
             }
             if (prevTok && prevTok.type === "punctuation.member") {
-                let members = findType(scope, toks[tokI - 2].value);
+                let members = tokI - 2 > 0 ? findType(scope, toks[tokI - 2].value) : [];
                 for (let m of members) {
                     members = members.concat(m.children.filter(k => k.type == 'function' || k.type == 'property')).filter(namedScopeFilter);
                 }
