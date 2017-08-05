@@ -27,7 +27,7 @@ class KTreeDOM {
 
 
 function init(){
-    var treeData = {name: 'Main',
+    var treeData = {name: 'K',
         toggled: true,
         children: [],
     };
