@@ -58,90 +58,106 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
 
   // class for listening for incoming expressions
 
-  class ExpressionListener extends ModelListener {
-    constructor(parser, structure) {
-        super();
-        this.parser = parser;
-        this.structure = structure;
-        this.structure.push({name: 'Top Level', children: []})
-        this._inScope = 0;
-        this.findLastLeafByDepth = function (index, arr) {
-            let last = arr.length - 1;
-            if (last < 0 ) {
-                return arr;
+    class ExpressionListener extends ModelListener {
+        constructor(parser, structure) {
+            super();
+            this.parser = parser;
+            this.structure = structure;
+            this.structure.push({name: 'Top Level', children: []});
+            this._inScope = 0;
+            this.findLastLeafByDepth = function (index, arr) {
+                let last = arr.length - 1;
+                if (last < 0) {
+                    return arr;
+                }
+                if (index == 0) {
+                    return arr[last];
+                }
+                return this.findLastLeafByDepth(index - 1, arr[last].children);
+            };
+        }
+
+        enterEntityDeclaration(ctx) {
+            var leafScope = this.findLastLeafByDepth(this._inScope, this.structure);
+            var classD = this._buildLeaf(ctx, 'class');
+            if (classD != null) {
+                classD.children = [];
+                leafScope.children.push(classD);
+                this._inScope += 1;
             }
-            if (index == 0) {
-                return arr[last];
+        }
+
+        exitEntityDeclaration(ctx) {
+            this._inScope -= 1;
+        }
+
+        enterFunctionDeclaration(ctx) {
+            var leafScope = this.findLastLeafByDepth(this._inScope, this.structure);
+            var fnD = this._buildLeaf(ctx, 'function');
+            if (fnD != null) {
+                fnD.children = [];
+                leafScope.children.push(fnD);
+                this._inScope += 1;
             }
-            return this.findLastLeafByDepth(index - 1, arr[last].children);
-        };
-    }
-
-    enterEntityDeclaration(ctx){
-      var tok = this.parser.getTokenStream();
-      if(ctx.Identifier() != null){
-          ctx.Identifier().forEach(i=>{
-              let idText = i.toString();
-              this.findLastLeafByDepth(this._inScope, this.structure).children.push({name: idText, line: i.symbol.line, col:i.symbol.column,  type: 'class', children: []});
-          })
-
-          this._inScope += 1;
-      }
-    }
-    exitEntityDeclaration(ctx){
-      this._inScope -= 1;
-    }
-
-    enterMemberDeclaration(ctx){
-        var leafScope = this.findLastLeafByDepth(this._inScope, this.structure);
-        let ctD = this._buildLeaf(ctx.constraint(),'constraint');
-        let extD = this._buildLeaf(ctx.expression(),'expression');
-        let propD = this._buildLeaf(ctx.propertyDeclaration(),'property');
-        let funcD = this._buildLeaf(ctx.functionDeclaration(),'function');
-
-        if(ctD != null){
-            leafScope.children.push(ctD);
         }
-        if(extD != null){
-            leafScope.children.push(extD);
-        }
-        if(propD != null){
-            leafScope.children.push(propD);
-        }
-        if(funcD != null){
-            leafScope.children.push(funcD);
-        }
-    }
 
-    _buildLeaf(ctx, type) {
-        var tok = this.parser.getTokenStream();
-        if (typeof ctx != 'undefined' && ctx != null) {
-            let name, kType;
-            if (ctx.Identifier && ctx.Identifier()){
-                name = ctx.Identifier().toString();
+        exitFunctionDeclaration(ctx) {
+            this._inScope -= 1;
+        }
+
+        enterMemberDeclaration(ctx) {
+            var leafScope = this.findLastLeafByDepth(this._inScope, this.structure);
+            let ctD = this._buildLeaf(ctx.constraint(), 'constraint');
+            let extD = this._buildLeaf(ctx.expression(), 'expression');
+            let propD = this._buildLeaf(ctx.propertyDeclaration(), 'property');
+
+            if (ctD != null) {
+                leafScope.children.push(ctD);
             }
-            if(ctx.type && ctx.type()){
-                let t=ctx.type();
-                var start_index = t.start.tokenIndex;
-                var stop_index = t.start.tokenIndex;
-                var typeText = tok.getText({start: start_index, stop: stop_index});
-                kType = typeText;
+            if (extD != null) {
+                leafScope.children.push(extD);
             }
-
-            var start_index = ctx.start.tokenIndex;
-            var stop_index = ctx.stop.tokenIndex;
-            var user_text = tok.getText({start: start_index, stop: stop_index});
-            let value = user_text;
-            let obj = {name: name, value: value, kType: kType,type: type, line: ctx.start.line, col: ctx.start.column};
-            return obj;
+            if (propD != null) {
+                leafScope.children.push(propD);
+            }
         }
-        return null;
-    }
 
-    exitModel(ctx){
-      console.log(this.structure);
+        _buildLeaf(ctx, type) {
+            var tok = this.parser.getTokenStream();
+            if (typeof ctx != 'undefined' && ctx != null) {
+                let name, kType;
+                if (ctx.Identifier && ctx.Identifier()) {
+                    name = ctx.Identifier().toString();
+                }
+                if (ctx.type && ctx.type()) {
+                    let t = ctx.type();
+                    var start_index = t.start.tokenIndex;
+                    var stop_index = t.start.tokenIndex;
+                    var typeText = tok.getText({start: start_index, stop: stop_index});
+                    kType = typeText;
+                }
+
+                var start_index = ctx.start.tokenIndex;
+                var stop_index = ctx.stop.tokenIndex;
+                var user_text = tok.getText({start: start_index, stop: stop_index});
+                let value = user_text;
+                let obj = {
+                    name: name,
+                    value: value,
+                    kType: kType,
+                    type: type,
+                    start: {line: ctx.start.line, col: ctx.start.column},
+                    end: {line: ctx.stop.line, col: ctx.stop.column}
+                };
+                return obj;
+            }
+            return null;
+        }
+
+        exitModel(ctx) {
+            console.log(this.structure);
+        }
     }
-  }
   
 
 
