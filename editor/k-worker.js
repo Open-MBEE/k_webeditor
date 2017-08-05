@@ -109,7 +109,7 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         if(propD != null){
             leafScope.children.push(propD);
         }
-        if(propD != null){
+        if(funcD != null){
             leafScope.children.push(funcD);
         }
     }
