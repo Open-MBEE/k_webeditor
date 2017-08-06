@@ -811,7 +811,7 @@ ace.define(
                 this.$outdent.autoOutdent(doc, row);
             };
 
-            this.renderExpressions = function (expr){
+            this.renderExpressions = function (expr, session){
                 const stripReq = (s) => { s.value = s.value.replace('req', '').replace(/\|\|/g, ' or ').replace(/\&\&/g, ' and '); return s};
                 const parseMath = e => {
                     try {
@@ -823,7 +823,8 @@ ace.define(
                     }
                 };
                 const toTex = p => {p.value = p.value.toTex(); return p;};
-                const toExprDOM = p => p.children ? cardOut(p) : $('<p class="prettyExpr" data-line="'+p.line+'" data-col="'+p.col+'">$$'+p.value+'$$</p>');
+                const toExprDOM = p => p.children ? cardOut(p) : $('<p class="prettyExpr" data-line="'+p.start.line+'" data-col="'+p.start.col+'">$$'+p.value+'$$</p>');
+                const toAnnotation = p => p.children ? annOut(p) : {line: p.start.line, display: '$$'+p.value+'$$'};
                 const cardOut = (obj, nest) => {
                     var isExpr = c => c.type == 'expression' || c.type == 'constraint';
                     var isClass = c => c.type == "class";
@@ -839,21 +840,42 @@ ace.define(
                     card.append(cardContent);
                     return card;
                 };
+                const annOut = (obj) => {
+                    var isExpr = c => c.type == 'expression' || c.type == 'constraint';
+                    var isClass = c => c.type == "class";
+
+                    let expressions = obj.children.filter(p=>isExpr(p))
+                        .map(stripReq).map(parseMath)
+                        .map(toTex).map(toAnnotation).reduce(flat,[]);
+                    let subCard = obj.children.filter(isClass).map(p=>annOut(p)).reduce(flat,[]);
+                    let out = [].concat(expressions).concat(subCard);
+                    return out;
+                };
                 const goToLineandCol = function (e){
                     var editor = ace.edit('editor');
                     let l = $(this).data('line');
                     let c = $(this).data('col');
-                    // editor.resize(true);
                     editor.focus();
                     editor.gotoLine(l, c, true);
 
                 };
+                const flat = function(a, b) {
+                    return a.concat(b);
+                };
+                let annotations = expr.map(annOut).reduce(flat,[]);
 
+
+                $('.widget.stack-message')
+                    .remove();
+
+                session.lineAnnotations = {};
+                for(let ann of annotations){
+                    session.lineAnnotations[ann.line - 1] = ann;
+                }
                 let expStr = expr.map(cardOut);
                 $('#renderDiv').html(expStr);
                 $('#renderDiv .ui.accordion').accordion({ animateChildren: false, exclusive: false });
                 $('#renderDiv .prettyExpr').on('click', goToLineandCol);
-
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub,"renderDiv"]);
             };
 
@@ -878,7 +900,7 @@ ace.define(
                     return n;}
                     );
                     session.$tree.data = e.data.map(tojsTree);
-                    session.$mode.renderExpressions(e.data);
+                    session.$mode.renderExpressions(e.data, session);
                 });
 
                 this.$worker.on("terminate", function () {

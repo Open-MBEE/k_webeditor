@@ -198,7 +198,7 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         this.sender.emit('annotate', annotations);
     };
 
-    this.onUpdate = _.debounce(runListeners, 100)
+    this.onUpdate = _.debounce(runListeners, 250)
 
   }).call(MyWorker.prototype);
 

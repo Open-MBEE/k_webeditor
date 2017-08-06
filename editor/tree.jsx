@@ -13,7 +13,30 @@ var styles =  {
             width: '100%',
             display: 'block'
         }
-    }
+    },
+    toggle: {
+        base: {
+            position: 'relative',
+            display: 'inline-block',
+            verticalAlign: 'top',
+            marginLeft: '-5px',
+            height: '12x',
+            width: '12px'
+        },
+        wrapper: {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            margin: '-7px 0 0 -7px',
+            height: '12px'
+        },
+        height: 12,
+        width: 12,
+        arrow: {
+            fill: '#9DA5AB',
+            strokeWidth: 0
+        }
+    },
 };
 // Tree Code - Define Styling
 
@@ -45,7 +68,7 @@ decorators.Header = ({style, node}) => {
         </div>
     )
 
-}
+};
 
 class KTree extends React.Component {
     constructor(props) {
@@ -82,7 +105,7 @@ class KTree extends React.Component {
         const {data: stateData, cursor} = this.state;
         return (
             <StyleRoot>
-                <div style={styles.component}>
+                <div style={styles}>
                     <Treebeard data={stateData}
                                decorators={decorators}
                                onToggle={this.onToggle}/>

@@ -139,7 +139,59 @@ function dfs(root, query, bag) {
     }
     return bag;
 }
+function addInlineExpr(e, renderer) {
+    var textLayer = renderer.$textLayer;
+    var config = textLayer.config;
+    var session = textLayer.session;
 
+    if (!session.lineAnnotations) return;
+
+    var first = config.firstRow;
+    var last = config.lastRow;
+
+    var lineElements = textLayer.element.childNodes;
+    var lineElementsIdx = 0;
+
+    var row = first;
+    var foldLine = session.getNextFoldLine(row);
+    var foldStart = foldLine ? foldLine.start.row : Infinity;
+
+    var useGroups = textLayer.$useLineGroups();
+    var widgets = [];
+    while (true) {
+        if (row > foldStart) {
+            row = foldLine.end.row + 1;
+            foldLine = textLayer.session.getNextFoldLine(row, foldLine);
+            foldStart = foldLine ? foldLine.start.row : Infinity;
+        }
+        if (row > last)
+            break;
+
+        var lineElement = lineElements[lineElementsIdx++];
+        if (lineElement && session.lineAnnotations[row]) {
+            if (useGroups) lineElement = lineElement.lastChild;
+            var widget, a = session.lineAnnotations[row];
+            if (!a.element) {
+                widget = document.createElement("span");
+                widget.textContent = a.display;
+                widget.className = "widget stack-message" + (a.more ? " more" : "");
+                widget.annotation = a;
+                widget.style = "display: none;";
+                session.lineAnnotations[row].element = widget;
+            }
+            else widget = a.element;
+
+            lineElement.appendChild(widget);
+            widgets.push(widget);
+        }
+        row++;
+    }
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub,widgets]);
+    MathJax.Hub.Queue(function(){
+        widgets.forEach((w)=>{w.style = "display: inline-block;" });
+    });
+
+}
 function initEditor () {
     var aceEditor = window.aceEditor = ace.edit('editor');
     var lang = ace.require("ace/ext/language_tools");
@@ -158,6 +210,9 @@ function initEditor () {
     //     // enableSnippets: true
         enableLiveAutocompletion: true
     });
+    aceEditor.renderer.on("afterRender", addInlineExpr);
+    aceEditor.session.lineAnnotations = {
+    };
     lang.setCompleters();
     lang.addCompleter(kCompleter);
     return aceEditor;

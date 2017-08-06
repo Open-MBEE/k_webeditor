@@ -1,7 +1,6 @@
 module.exports = {
   literals: {
     'keyword': ['fun', 'class',"req", "type", "package", "import", "annotation", "extends", "fun", "pre", "post", "is", "as", "match", "with", "assert", "$result", "case","source", "target", "var"],
-    "variable.language": ["this", "true", "false"],
     "keyword.control": ["while", "if", "for", "end", "forall", "do", "then", "else", "continue", "break", "return"],
     'keyword.operator': ['=', '-', '!', '*', '+', '!=', '&&', '||', '>', '<', '<=', '>=', "isin", "!isin", "subset", "psubset", "union", "inter", "in", "exists"],
     'paren.lparen': ['(', '{', '['],
@@ -13,9 +12,11 @@ module.exports = {
   },
   symbols: {
     'variable.parameter': 'Identifier',
+    'variable.language': 'ThisLiteral',
     'constant.numeric': ['IntegerLiteral', 'RealLiteral', 'OctalIntegerLiteral'],
     'string': 'StringLiteral',
     'comment': 'LINE_COMMENT',
-    'comment.border': 'CommentBorder'
+    'comment.border': 'CommentBorder',
+    'meta.ws': 'WS'
   }
 };

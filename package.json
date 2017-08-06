@@ -21,6 +21,7 @@
   "dependencies": {
     "antlr4": "^4.7.0",
     "body-parser": "^1.17.2",
+    "deep-diff": "^0.3.8",
     "express": "^4.15.3",
     "lodash": "^4.17.4",
     "react": "^15.6.1",
