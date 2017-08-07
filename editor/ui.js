@@ -59,7 +59,7 @@ function init(){
                 };
                 // var nTree = data.tree.tree.map(tojsTree);
                 $('#renderDiv').html(cardOut(data));
-                var solEditor = window.aceEditor = ace.edit('solutionDiv');
+                var solEditor = ace.edit('solutionDiv');
                 // var lang = ace.require("ace/ext/language_tools");
                 // ace.config.setModuleUrl(
                 //     'ace/mode/k-mode', './k-mode.js'
