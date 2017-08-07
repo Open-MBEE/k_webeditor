@@ -71,6 +71,10 @@ function init(){
                 solEditor.$blockScrolling = Infinity;
                 solEditor.setTheme("ace/theme/twilight");
                 solEditor.renderer.setShowGutter(false);
+                  var characterWidth = solEditor.renderer.layerConfig.characterWidth;
+                    var contentWidth = solEditor.container.ownerDocument.getElementsByClassName("ace_scroller")[0].clientWidth;
+
+                solEditor.session.setWrapLimit(parseInt(contentWidth / characterWidth, 10));
                 solEditor.getSession().setMode('ace/mode/javascript');
                 // kTreeInstance.data = treeData.children = nTree;
             } catch (e){
