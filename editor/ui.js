@@ -59,19 +59,19 @@ function init(){
                 };
                 // var nTree = data.tree.tree.map(tojsTree);
                 $('#renderDiv').html(cardOut(data));
-                // var solEditor = window.aceEditor = ace.edit('solutionDiv');
-                // var lang = ace.require("ace/ext/language_tools");
-                // ace.config.setModuleUrl(
-                //     'ace/mode/k-mode', './k-mode.js'
-                // );
-                // ace.config.setModuleUrl(
-                //     'ace/worker/k-worker',
-                //     './k-worker.js'
-                // );
-                // solEditor.$blockScrolling = Infinity;
-                // solEditor.setTheme("ace/theme/twilight");
-                // solEditor.getSession().setMode('ace/mode/k-mode');
-                kTreeInstance.data = treeData.children = nTree;
+                var solEditor = window.aceEditor = ace.edit('solutionDiv');
+                var lang = ace.require("ace/ext/language_tools");
+                ace.config.setModuleUrl(
+                    'ace/mode/k-mode', './k-mode.js'
+                );
+                ace.config.setModuleUrl(
+                    'ace/worker/k-worker',
+                    './k-worker.js'
+                );
+                solEditor.$blockScrolling = Infinity;
+                solEditor.setTheme("ace/theme/twilight");
+                solEditor.getSession().setMode('ace/mode/k-mode');
+                // kTreeInstance.data = treeData.children = nTree;
             } catch (e){
                 console.log(e);
             }
