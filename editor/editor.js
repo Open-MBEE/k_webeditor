@@ -213,6 +213,7 @@ function initEditor () {
     aceEditor.renderer.on("afterRender", addInlineExpr);
     aceEditor.session.lineAnnotations = {
     };
+    aceEditor.session.$buildtree = true;
     lang.setCompleters();
     lang.addCompleter(kCompleter);
     return aceEditor;

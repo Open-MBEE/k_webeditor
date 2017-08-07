@@ -874,8 +874,8 @@ ace.define(
                 }
                 // let expStr = expr.map(cardOut);
                 // $('#renderDiv').html(expStr);
-                $('#renderDiv .ui.accordion').accordion({ animateChildren: false, exclusive: false });
-                $('#renderDiv .prettyExpr').on('click', goToLineandCol);
+                
+                //$('#renderDiv .prettyExpr').on('click', goToLineandCol);
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub,"renderDiv"]);
             };
 
@@ -892,6 +892,7 @@ ace.define(
                 });
 
                 this.$worker.on("parseDecl", function (e) {
+                   if(session.$buildtree){
                     session.$struct = e.data;
                     const tojsTree = (n=>{n.active = false; if(n.children){
                         n.children = n.children.map(tojsTree);
@@ -901,6 +902,7 @@ ace.define(
                     );
                     session.$tree.data = e.data.map(tojsTree);
                     session.$mode.renderExpressions(e.data, session);
+                   }
                 });
 
                 this.$worker.on("terminate", function () {
