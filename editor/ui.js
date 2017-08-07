@@ -52,7 +52,7 @@ function init(){
                     var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
                     var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> Solution </div>`);
                     var cardContent = $(`<div class="active content" style=""></div>`);
-                    var cardContent2 = $(`<div id="solutionDiv" style="height: 10rem;">${JSON.stringify(obj.result)}</div>`);
+                    var cardContent2 = $(`<div id="solutionDiv" style="height: 10rem;">${obj.result.solution}\n --- satisfied: ${obj.result.satisfied} \n ${obj.result.constraints.join('\n')}</div>`);
                     card.append(cardTitle);
                     card.append(cardContent.append(cardContent2));
                     return card;
