@@ -825,24 +825,24 @@ ace.define(
                 const toTex = p => {p.value = p.value.toTex(); return p;};
                 const toExprDOM = p => p.children ? cardOut(p) : $('<p class="prettyExpr" data-line="'+p.start.line+'" data-col="'+p.start.col+'">$$'+p.value+'$$</p>');
                 const toAnnotation = p => p.children ? annOut(p) : {line: p.start.line, display: '$$'+p.value+'$$'};
-                const cardOut = (obj, nest) => {
-                    var isExpr = c => c.type == 'expression' || c.type == 'constraint';
-                    var isClass = c => c.type == "class";
-                    var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
-                    var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> ${obj.name}</div>`);
-                    var cardContent = $(`<div class="active content"></div>`);
-                    cardContent.append(`<div class="subtitle"><i>${obj.children.filter(p=>isExpr(p)).length} expressions</i></div>`);
-                    let expressions = obj.children.filter(p=>isExpr(p)).map(stripReq).map(parseMath).map(toTex).map(toExprDOM);
-                    let subCard = obj.children.filter(isClass).map(p=>cardOut(p, true));
-                    cardContent.append(expressions);
-                    cardContent.append(subCard);
-                    card.append(cardTitle);
-                    card.append(cardContent);
-                    return card;
-                };
+                // const cardOut = (obj, nest) => {
+                //     var isExpr = c => c.type == 'expression' || c.type == 'constraint';
+                //     var isClass = c => c.type == "class";
+                //     var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
+                //     var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> ${obj.name}</div>`);
+                //     var cardContent = $(`<div class="active content"></div>`);
+                //     cardContent.append(`<div class="subtitle"><i>${obj.children.filter(p=>isExpr(p)).length} expressions</i></div>`);
+                //     let expressions = obj.children.filter(p=>isExpr(p)).map(stripReq).map(parseMath).map(toTex).map(toExprDOM);
+                //     let subCard = obj.children.filter(isClass).map(p=>cardOut(p, true));
+                //     cardContent.append(expressions);
+                //     cardContent.append(subCard);
+                //     card.append(cardTitle);
+                //     card.append(cardContent);
+                //     return card;
+                // };
                 const annOut = (obj) => {
                     var isExpr = c => c.type == 'expression' || c.type == 'constraint';
-                    var isClass = c => c.type == "class";
+                    var isClass = c => c.type == "  class";
 
                     let expressions = obj.children.filter(p=>isExpr(p))
                         .map(stripReq).map(parseMath)
