@@ -52,7 +52,7 @@ function init(){
                     var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
                     var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> Solution </div>`);
                     var cardContent = $(`<div class="active content" style=""></div>`);
-                    var cardContent2 = $(`<div id="solutionDiv" style="height: 10rem;">${obj.result}</div>`);
+                    var cardContent2 = $(`<div id="solutionDiv" style="height: 10rem;">${JSON.stringify(obj.result)}</div>`);
                     card.append(cardTitle);
                     card.append(cardContent.append(cardContent2));
                     return card;
@@ -70,6 +70,7 @@ function init(){
                 // );
                 solEditor.$blockScrolling = Infinity;
                 solEditor.setTheme("ace/theme/twilight");
+                solEditor.renderer.setShowGutter(true/false);
                 solEditor.getSession().setMode('ace/mode/javascript');
                 // kTreeInstance.data = treeData.children = nTree;
             } catch (e){
