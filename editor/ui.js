@@ -52,7 +52,7 @@ function init(){
                     var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
                     var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> Solution </div>`);
                     var cardContent = $(`<div class="active content"></div>`);
-                    var cardContent2 = $(`<div id="solutionDiv">${obj.result.solution}</div>`);
+                    var cardContent2 = $(`<div id="solutionDiv">${obj.result}</div>`);
                     card.append(cardTitle);
                     card.append(cardContent.append(cardContent2));
                     return card;
@@ -60,17 +60,17 @@ function init(){
                 // var nTree = data.tree.tree.map(tojsTree);
                 $('#renderDiv').html(cardOut(data));
                 var solEditor = window.aceEditor = ace.edit('solutionDiv');
-                var lang = ace.require("ace/ext/language_tools");
-                ace.config.setModuleUrl(
-                    'ace/mode/k-mode', './k-mode.js'
-                );
-                ace.config.setModuleUrl(
-                    'ace/worker/k-worker',
-                    './k-worker.js'
-                );
+                // var lang = ace.require("ace/ext/language_tools");
+                // ace.config.setModuleUrl(
+                //     'ace/mode/k-mode', './k-mode.js'
+                // );
+                // ace.config.setModuleUrl(
+                //     'ace/worker/k-worker',
+                //     './k-worker.js'
+                // );
                 solEditor.$blockScrolling = Infinity;
                 solEditor.setTheme("ace/theme/twilight");
-                solEditor.getSession().setMode('ace/mode/k-mode');
+                solEditor.getSession().setMode('ace/mode/javascript');
                 // kTreeInstance.data = treeData.children = nTree;
             } catch (e){
                 console.log(e);
