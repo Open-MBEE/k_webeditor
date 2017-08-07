@@ -52,29 +52,25 @@ function init(){
                     var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
                     var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> Solution </div>`);
                     var cardContent = $(`<div class="active content"></div>`);
-                    var cardContent2 = $(`<div id="solutionDiv">${obj.solution}</div>`);
-                    // let expressions = obj.children.filter(p=>isExpr(p)).map(stripReq).map(parseMath).map(toTex).map(toExprDOM);
-                    // let subCard = obj.children.filter(isClass).map(p=>cardOut(p, true));
-                    // cardContent.append(expressions);
-                    // cardContent.append(subCard);
+                    var cardContent2 = $(`<div id="solutionDiv">${obj.result.solution}</div>`);
                     card.append(cardTitle);
                     card.append(cardContent.append(cardContent2));
                     return card;
                 };
                 var nTree = data.tree.tree.map(tojsTree);
                 $('#renderDiv').html(cardOut(data));
-                var solEditor = window.aceEditor = ace.edit('solutionDiv');
-                var lang = ace.require("ace/ext/language_tools");
-                ace.config.setModuleUrl(
-                    'ace/mode/k-mode', './k-mode.js'
-                );
-                ace.config.setModuleUrl(
-                    'ace/worker/k-worker',
-                    './k-worker.js'
-                );
-                solEditor.$blockScrolling = Infinity;
-                solEditor.setTheme("ace/theme/twilight");
-                solEditor.getSession().setMode('ace/mode/k-mode');
+                // var solEditor = window.aceEditor = ace.edit('solutionDiv');
+                // var lang = ace.require("ace/ext/language_tools");
+                // ace.config.setModuleUrl(
+                //     'ace/mode/k-mode', './k-mode.js'
+                // );
+                // ace.config.setModuleUrl(
+                //     'ace/worker/k-worker',
+                //     './k-worker.js'
+                // );
+                // solEditor.$blockScrolling = Infinity;
+                // solEditor.setTheme("ace/theme/twilight");
+                // solEditor.getSession().setMode('ace/mode/k-mode');
                 kTreeInstance.data = treeData.children = nTree;
             } catch (e){
                 console.log(e);
