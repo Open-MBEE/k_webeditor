@@ -52,13 +52,13 @@ function init(){
                     var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
                     var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> Solution </div>`);
                     var cardContent = $(`<div class="active content"></div>`);
-                    var cardContent = $(`<div id="solutionDiv">${obj.solution}</div>`);
+                    var cardContent2 = $(`<div id="solutionDiv">${obj.solution}</div>`);
                     // let expressions = obj.children.filter(p=>isExpr(p)).map(stripReq).map(parseMath).map(toTex).map(toExprDOM);
                     // let subCard = obj.children.filter(isClass).map(p=>cardOut(p, true));
-                    cardContent.append(expressions);
+                    // cardContent.append(expressions);
                     // cardContent.append(subCard);
                     card.append(cardTitle);
-                    card.append(cardContent);
+                    card.append(cardContent.append(cardContent2));
                     return card;
                 };
                 var nTree = data.tree.tree.map(tojsTree);

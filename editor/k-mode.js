@@ -873,7 +873,7 @@ ace.define(
                     session.lineAnnotations[ann.line - 1] = ann;
                 }
                 // let expStr = expr.map(cardOut);
-                $('#renderDiv').html(expStr);
+                // $('#renderDiv').html(expStr);
                 $('#renderDiv .ui.accordion').accordion({ animateChildren: false, exclusive: false });
                 $('#renderDiv .prettyExpr').on('click', goToLineandCol);
                 MathJax.Hub.Queue(["Typeset", MathJax.Hub,"renderDiv"]);
