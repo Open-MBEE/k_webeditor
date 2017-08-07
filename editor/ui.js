@@ -48,7 +48,7 @@ function init(){
             try{
                 JSON.parse(JSON.stringify(data.tree));
                 // const tojsTree = (n=>{n.active = false; n.children = n.children.map(tojsTree); n.toggled = true; return n;}).filter(n=>name.length > 0);
-                const cardOut = (obj) => {
+                const cardOut = (obj,nest) => {
                     var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
                     var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> Solution </div>`);
                     var cardContent = $(`<div class="active content"></div>`);
