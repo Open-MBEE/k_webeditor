@@ -70,7 +70,7 @@ function init(){
                 // );
                 solEditor.$blockScrolling = Infinity;
                 solEditor.setTheme("ace/theme/twilight");
-                solEditor.renderer.setShowGutter(true/false);
+                solEditor.renderer.setShowGutter(false);
                 solEditor.getSession().setMode('ace/mode/javascript');
                 // kTreeInstance.data = treeData.children = nTree;
             } catch (e){
