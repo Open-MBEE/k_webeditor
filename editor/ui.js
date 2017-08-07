@@ -47,7 +47,7 @@ function init(){
             $('#consoleContent pre').html(data.errors.join(''));
             try{
                 JSON.parse(JSON.stringify(data.tree));
-                const tojsTree = (n=>{n.active = false; n.children = n.children.map(tojsTree); n.toggled = true; return n;}).filter(n=>name.length > 0);
+                // const tojsTree = (n=>{n.active = false; n.children = n.children.map(tojsTree); n.toggled = true; return n;}).filter(n=>name.length > 0);
                 const cardOut = (obj) => {
                     var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
                     var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> Solution </div>`);
@@ -57,7 +57,7 @@ function init(){
                     card.append(cardContent.append(cardContent2));
                     return card;
                 };
-                var nTree = data.tree.tree.map(tojsTree);
+                // var nTree = data.tree.tree.map(tojsTree);
                 $('#renderDiv').html(cardOut(data));
                 // var solEditor = window.aceEditor = ace.edit('solutionDiv');
                 // var lang = ace.require("ace/ext/language_tools");
