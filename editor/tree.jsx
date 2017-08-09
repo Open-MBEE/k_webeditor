@@ -47,11 +47,15 @@ decorators.Header = ({style, node}) => {
             iconType='file text outline';
             break;
         case 'property':
-            iconType='chevron right outline';
+            iconType='hand-spock-o';
             break;
         case 'constraint':
             iconType='file code outline';
             break;
+        case 'expression':
+            iconType='tag outline'
+        case 'function':
+            iconType='wrench'
         default:
             iconType='cogs';
 

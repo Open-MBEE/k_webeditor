@@ -842,11 +842,10 @@ ace.define(
                 };
                 const annOut = (obj) => {
                     var isExpr = c => c.type == 'expression' || c.type == 'constraint';
-                    var isClass = c => c.type == "  class";
+                    var isClass = c => c.type == "class" || c.type == "function";
 
                     let expressions = obj.children.filter(p=>isExpr(p))
-                        .map(stripReq).map(parseMath)
-                        .map(toTex).map(toAnnotation).reduce(flat,[]);
+                        .map(stripReq).map(r=>r.value).map(toAnnotation).reduce(flat,[]);
                     let subCard = obj.children.filter(isClass).map(p=>annOut(p)).reduce(flat,[]);
                     let out = [].concat(expressions).concat(subCard);
                     return out;
@@ -863,7 +862,7 @@ ace.define(
                     return a.concat(b);
                 };
                 let annotations = expr.map(annOut).reduce(flat,[]);
-
+                console.log(annotations);
 
                 $('.widget.stack-message')
                     .remove();

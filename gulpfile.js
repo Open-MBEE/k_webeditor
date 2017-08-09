@@ -71,8 +71,10 @@ gulp.task('main', function () {
                 'process.env': {
                     NODE_ENV: JSON.stringify('production')
                 }
-            }),
-                new UglifyJSPlugin({ sourceMap: true })]
+            })
+                // ,
+                // new UglifyJSPlugin({ sourceMap: true })
+            ]
         }, webpack))
         .pipe(gulp.dest('./editor/build/main/'))
 });
