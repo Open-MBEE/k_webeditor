@@ -21,7 +21,7 @@ annotationDeclaration:
 ;
 
 annotation:
-  '@' Identifier '(' expression ')'
+  '@' Identifier ('(' expression ')')?
 ;
 
 topDeclaration:
@@ -64,6 +64,7 @@ blockDeclaration:
 
 memberDeclaration:
     typeDeclaration
+  | entityDeclaration
   | propertyDeclaration
   | functionDeclaration
   | constraint 
@@ -123,6 +124,7 @@ expressionOrStar:
 type:
   primitiveType                   # PrimType
 | classIdentifier typeArguments?  # IdentType
+| classIdentifier ('[' ']')+      # ArrayType
 | type ('*' type)+                # CartesianType
 | type '->' type                  # FuncType
 | '(' type ')'					  # ParenType
@@ -135,7 +137,7 @@ primitiveType:
   | 'Int'       // Scala bigint (arbitrary precision)
   | 'Real'      // double
   | 'String'
-  | 'Unit'  
+  | 'Unit'
   ;
 
 classIdentifier:
@@ -146,6 +148,7 @@ classIdentifier:
 
 collectionKind:
   'Set'
+| 'OSet'
 | 'Bag'
 | 'Seq' 
 ;
@@ -159,17 +162,22 @@ expression:
   | 'Tuple' '(' expression (',' expression)+ ')' #TupleExp
   | literal #LiteralExp
   | Identifier #IdentExp
+  | primitiveType #IdentExp
   | expression '.' Identifier #DotExp
+  | type '.' 'class' #ClassExp 
   | expression '(' argumentList? ')' #AppExp
+  | expression '[' positionalArgumentList ']' #IndexExp
   | '!' expression #NotExp
   | '{' block  '}' #BlockExp
   | 'if' expression 'then' expression ('else' expression)? #IfExp
-  // | 'match' expression 'with' match+  #MatchExp
+//  | 'match' expression 'with' match+  #MatchExp
   | 'while' expression 'do' expression  #WhileExp
   | 'for' pattern 'in' expression 'do' expression # ForExp 
   | collectionKind '{' expressionList? '}' #SetEnumExp
   | collectionKind '{' expression '..' expression '}' #SetRngExp
   | collectionKind '{' expression '|' rngBindingList SUCHTHAT expression '}' #SetCompExp 
+  | expression 'is' type # TypeCheckExp
+  | expression 'as' type # TypeCastExp
   | expression ('*'|'/'|'%'|'inter'|'\\'|'++'|'#'|'^') expression #BinOp1Exp
   | expression ('+'|'-'|'union') expression #BinOp2Exp
   | expression ('<=' | '>=' | '<' | '>' | '=' | '!=' | 'isin'|'!isin'|'subset'|'psubset') expression #BinOp3Exp
@@ -177,8 +185,6 @@ expression:
   | expression '||' expression #OrExp
   | expression ('=>' | '<=>') expression #IFFExp
   | expression ':=' expression #AssignExp
-  | expression 'is' type # TypeCheckExp
-  | expression 'as' type # TypeCastExp
   | 'assert' '(' expression ')' #AssertExp 
   | '-' expression #NegExp
   | qualifiedName '~' #PrevExp
@@ -191,9 +197,9 @@ expression:
   | '$result' #ResultExp
   ;
 
-// match:
-//   'case' pattern ('|' pattern)* '=>' expression
-//   ;
+//match:
+//  'case' pattern ('|' pattern)* '=>' expression
+//  ;
 
 argumentList: 
     positionalArgumentList #PosArgList
@@ -201,7 +207,7 @@ argumentList:
   ;
 
 positionalArgumentList:
-    expression (',' expression)* 
+    expression ((',' | (']' '[')) expression)* 
     ;
 
 namedArgumentList:
@@ -521,10 +527,10 @@ JavaLetter:
       [a-zA-Z$_] // these are the "java letters" below 0xFF
     |   // covers all characters above 0xFF which are not a surrogate
         ~[\u0000-\u00FF\uD800-\uDBFF]
-        
+//        {Character.isJavaIdentifierStart(_input.LA(-1))}?
     |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
         [\uD800-\uDBFF] [\uDC00-\uDFFF]
-        
+//        {Character.isJavaIdentifierStart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
     ;
 
 fragment
@@ -532,10 +538,10 @@ JavaLetterOrDigit:
       [a-zA-Z0-9$_] // these are the "java letters or digits" below 0xFF
     |   // covers all characters above 0xFF which are not a surrogate
         ~[\u0000-\u00FF\uD800-\uDBFF]
-        
+//        {Character.isJavaIdentifierPart(_input.LA(-1))}?
     |   // covers UTF-16 surrogate pairs encodings for U+10000 to U+10FFFF
         [\uD800-\uDBFF] [\uDC00-\uDFFF]
-        
+//        {Character.isJavaIdentifierPart(Character.toCodePoint((char)_input.LA(-2), (char)_input.LA(-1)))}?
     ;
 
 CommentBorder:
@@ -543,15 +549,15 @@ CommentBorder:
    ;
 
 COMMENT :
-     CommentBorder .*? CommentBorder -> channel(HIDDEN)
+     CommentBorder .*? CommentBorder -> skip
   ;
 
 LINE_COMMENT:
-    '--' ~[\r\n]* -> channel(HIDDEN)
+    '--' ~[\r\n]* -> skip
   ;
 
 WS:
-    [ \t\r\n\u000C]+ -> channel(HIDDEN)
+    [ \t\r\n\u000C]+ -> skip
   ;
 
 SEP:

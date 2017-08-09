@@ -1,4 +1,4 @@
-// Generated from /home/afrivera/git/Klang/src/grammar/Model.g4 by ANTLR 4.7
+// Generated from ./Model.g4 by ANTLR 4.7
 // jshint ignore: start
 var antlr4 = require('antlr4/index');
 
@@ -224,6 +224,15 @@ ModelListener.prototype.enterExpressionOrStar = function(ctx) {
 
 // Exit a parse tree produced by ModelParser#expressionOrStar.
 ModelListener.prototype.exitExpressionOrStar = function(ctx) {
+};
+
+
+// Enter a parse tree produced by ModelParser#ArrayType.
+ModelListener.prototype.enterArrayType = function(ctx) {
+};
+
+// Exit a parse tree produced by ModelParser#ArrayType.
+ModelListener.prototype.exitArrayType = function(ctx) {
 };
 
 
@@ -611,6 +620,15 @@ ModelListener.prototype.enterParenExp = function(ctx) {
 
 // Exit a parse tree produced by ModelParser#ParenExp.
 ModelListener.prototype.exitParenExp = function(ctx) {
+};
+
+
+// Enter a parse tree produced by ModelParser#ClassExp.
+ModelListener.prototype.enterClassExp = function(ctx) {
+};
+
+// Exit a parse tree produced by ModelParser#ClassExp.
+ModelListener.prototype.exitClassExp = function(ctx) {
 };
 
 
