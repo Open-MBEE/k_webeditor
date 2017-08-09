@@ -845,7 +845,7 @@ ace.define(
                     var isClass = c => c.type == "class" || c.type == "function";
 
                     let expressions = obj.children.filter(p=>isExpr(p))
-                        .map(stripReq).map(r=>r.value).map(toAnnotation).reduce(flat,[]);
+                        .map(stripReq).map(toAnnotation).reduce(flat,[]);
                     let subCard = obj.children.filter(isClass).map(p=>annOut(p)).reduce(flat,[]);
                     let out = [].concat(expressions).concat(subCard);
                     return out;
