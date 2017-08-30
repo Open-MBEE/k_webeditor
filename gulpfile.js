@@ -113,7 +113,7 @@ gulp.task('parser', function () {
                 }
             }),
                 new UglifyJSPlugin()]
-        })).pipe(gulp.dest('./editor/build/parser/'))
+        },webpack)).pipe(gulp.dest('./editor/build/parser/'))
 });
 gulp.task('watch',function(){
     gulp.watch('./editor/editor.js', ['main']);
