@@ -33,7 +33,7 @@ app.post('/solve/:runType', function (req, res) {
                   if (code) {
                       console.error(`exec error: ${code}`);
                       console.log(stdout,stderr);
-                      var errr=error + '\n' + stderr
+                      var errr= code + '\n' + stderr
                       res.json({error: stderr});
                   } else {
                       let outArr = stdout.split("**************");

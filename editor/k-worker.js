@@ -155,7 +155,7 @@ ace.define('ace/worker/k-worker', ["require", "exports", "module", "ace/lib/oop"
         }
 
         exitModel(ctx) {
-            console.log(this.structure);
+            console.log(JSON.stringify(this.structure));
         }
     }
   
