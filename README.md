@@ -20,17 +20,24 @@ If you make a change to app.js, you can restart with
 
 ## How to set up
 
-### If you already have the basic tools, then at the command line in the k_webeditor dir, enter
+### Simple setup
+
+If you've got NodeJS and have cloned k_webeditor, then at the command line in the k_webeditor dir, enter
+
     npm install
+    npm install --save gulp-install
     npm install semantic-ui --save
     cd semantic/
     gulp build
     cd ..
     gulp main
 
-### If you are on Mac OS, follow these to get set up with all of the tools, install, and run k_webeditor:
+### Complete setup for Mac OS
 
-1. Install XCode Command Line Tools -- do a web search for instructions
+If you are on Mac OS, follow these to get all of the tools and install k_webeditor:
+
+1. If installing Install XCode Command Line Tools -- do a web search for instructions
+2. Clone this k_webeditor repository.
 2. Get homebrew.  Instructions: https://brew.sh/
 3. Install NodeJS.  At the command line,
 
@@ -44,7 +51,13 @@ If you make a change to app.js, you can restart with
     npm install -g gulp
     ```
 
-5. Install semantic-ui:
+5. Change to the k_webeditor directory wherever that is.  For example,
+
+    ```
+    cd ${HOME}/git/k_webeditor
+    ```
+
+5. Install and build semantic-ui:
 
     ```
     npm install semantic-ui --save
@@ -53,7 +66,7 @@ If you make a change to app.js, you can restart with
     cd ..
     ```
 
-6. Now build all:
+6. Now install and build the rest of the javascript libraries and k_webeditor:
 
     ```
     gulp build

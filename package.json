@@ -23,6 +23,7 @@
     "body-parser": "^1.17.2",
     "deep-diff": "^0.3.8",
     "express": "^4.15.3",
+    "gulp-install": "^1.1.0",
     "lodash": "^4.17.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
