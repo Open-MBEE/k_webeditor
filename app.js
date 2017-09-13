@@ -21,12 +21,13 @@ app.post('/solve/:runType', function (req, res) {
     var identifier = ip + '_' + Date.now();
     var pkg = 'K'+identifier;
 
-
-    if(!fs.existsSync(ip)){
-      shell.mkdir('-p',ip)
+    var dir = 'editor/data/' + ip
+    var srcdir = 'editor/data/src/' + pkg
+    if(!fs.existsSync(dir)){
+      shell.mkdir('-p',dir)
     } else {
-        let filePath = `${shell.pwd()}/${ip}/${pkg}.k`
-        fs.writeFile('./'+ip+'/'+pkg+'.k', req.body.value, function(err){
+        let filePath = `${shell.pwd()}/${dir}/${pkg}.k`
+        fs.writeFile('./'+dir+'/'+pkg+'.k', req.body.value, function(err){
             if(!err){
                 var command = `bash k --${runType}  --package ${pkg} ${filePath}`;
                 shell.exec(command, (code, stdout, stderr) => {
