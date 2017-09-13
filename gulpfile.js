@@ -3,10 +3,17 @@ var named = require('vinyl-named');
 var webpack = require('webpack');
 var webpackStream = require('webpack-stream');
 var replace = require("gulp-replace");
+var install = require("gulp-install");
+
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 
 const parserDir = './build/parser/';
+
+gulp.task('install', function () {
+    return gulp.src("./package.json")
+        .pipe(install());
+});
 
 gulp.task('translateGrammar', () => {
 return gulp.src('./parser/Model.g4') // Relies on .g4 extension!
@@ -113,7 +120,7 @@ gulp.task('parser', function () {
                 }
             }),
                 new UglifyJSPlugin()]
-        })).pipe(gulp.dest('./editor/build/parser/'))
+        },webpack)).pipe(gulp.dest('./editor/build/parser/'))
 });
 gulp.task('watch',function(){
     gulp.watch('./editor/editor.js', ['main']);
@@ -121,7 +128,7 @@ gulp.task('watch',function(){
     gulp.watch('./editor/index.js', ['main']);
 });
 
-gulp.task('build', ['antlr','parser', 'main']);
+gulp.task('build', ['install', 'antlr','parser', 'main']);
 gulp.task('default', ['watch']);
 
 

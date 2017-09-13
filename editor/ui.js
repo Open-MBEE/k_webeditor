@@ -52,7 +52,7 @@ function init(){
                     var card = nest ? $('<div class="accordion"></div>') : $('<div class="ui styled accordion"></div>');
                     var cardTitle =  $(`<div class="active title"> <i class="chevron down icon"></i> Solution </div>`);
                     var cardContent = $(`<div class="active content" style=""></div>`);
-                    var cardContent2 = $(`<div id="solutionDiv" style="height: 15rem;">${obj.result.solution}\n --- satisfied: ${obj.result.satisfied} \n ${Array.isArray(obj.result.constraints) ? obj.result.constraints.join('\n') :  obj.result.constraints}</div>`);
+                    var cardContent2 = $(`<div id="solutionDiv" style="height: 80rem;">${obj.result.solution}\n --- satisfied: ${obj.result.satisfied} \n ${Array.isArray(obj.result.constraints) ? obj.result.constraints.join('\n') :  obj.result.constraints}</div>`);
                     card.append(cardTitle);
                     card.append(cardContent.append(cardContent2));
                     return card;
@@ -62,9 +62,9 @@ function init(){
                 $('#renderDiv').html(cardOut(data));
                 var solEditor = ace.edit('solutionDiv');
                 solEditor.setOptions({
-                    readOnly: true,
-                    highlightActiveLine: false,
-                    highlightGutterLine: false
+                    readOnly: false,
+                    highlightActiveLine: true,
+                    highlightGutterLine: true
                 });
                 solEditor.renderer.$cursorLayer.element.style.opacity=0;
                 // var lang = ace.require("ace/ext/language_tools");
@@ -75,12 +75,12 @@ function init(){
                 //     'ace/worker/k-worker',
                 //     './k-worker.js'
                 // );
-                solEditor.$blockScrolling = Infinity;
+                //solEditor.$blockScrolling = Infinity;
                 solEditor.setTheme("ace/theme/twilight");
                 solEditor.renderer.setShowGutter(false);
-                var characterWidth = solEditor.renderer.layerConfig.characterWidth;
-                var contentWidth = solEditor.container.ownerDocument.getElementsByClassName("ace_scroller")[0].clientWidth;
-                solEditor.session.setWrapLimit(parseInt(contentWidth / characterWidth, 10));
+                //var characterWidth = solEditor.renderer.layerConfig.characterWidth;
+                //var contentWidth = solEditor.container.ownerDocument.getElementsByClassName("ace_scroller")[0].clientWidth;
+               // solEditor.session.setWrapLimit(parseInt(contentWidth / characterWidth, 10));
                 solEditor.getSession().setMode('ace/mode/k-mode');
                 // kTreeInstance.data = treeData.children = nTree;
             } catch (e){
