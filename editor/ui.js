@@ -43,9 +43,15 @@ function init(){
 
     $('#consoleTitle').on('click', toggleConsole);
     $('#send').on('click', function (){
+        $('.dimmer').dimmer('show');
+var snd = new Audio("TazSpin2.oga"); 
+snd.volume=0.05;
+snd.play();
         $.post('/solve/solve',{value: window.aceEditor.getValue()} , function (data){
             $('#consoleContent pre').html(data.errors.join(''));
             try{
+snd.pause();
+                $('.dimmer').dimmer('hide');
                 JSON.parse(JSON.stringify(data.tree));
                 // const tojsTree = (n=>{n.active = false; n.children = n.children.map(tojsTree); n.toggled = true; return n;}).filter(n=>name.length > 0);
                 const cardOut = (obj,nest) => {

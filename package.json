@@ -22,6 +22,7 @@
     "antlr4": "^4.7.0",
     "body-parser": "^1.17.2",
     "deep-diff": "^0.3.8",
+    "enhanced-resolve": "^4.0.0-beta.4",
     "express": "^4.15.3",
     "gulp-install": "^1.1.0",
     "lodash": "^4.17.4",
@@ -32,7 +33,9 @@
     "react-ui-tree": "^3.0.0",
     "semantic-ui": "^2.2.11",
     "shelljs": "^0.7.8",
+    "tapable": "^1.0.0-beta.5",
     "velocity-react": "^1.3.3",
+    "watchpack": "^1.4.0",
     "webpack": "^3.5.5"
   },
   "devDependencies": {
